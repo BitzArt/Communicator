@@ -17,13 +17,13 @@ public record FluxSetDataPageQuery<TModel>
     public TableState TableState { get; set; } = null!;
 
     /// <summary>
-    /// Parameters for the request.
+    /// Parameters of the request.
     /// </summary>
     [JsonConverter(typeof(ItemConverter<TypedObjectJsonConverter<object>>))]
     public object[] Parameters { get; set; } = null!;
 
     /// <summary>
-    /// Data returned by the request.
+    /// Result data.
     /// </summary>
     public PageResult<TModel> Data { get; set; } = null!;
 

@@ -33,7 +33,7 @@ public interface IFluxSetDataProvider<TModel>
     public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
 
     /// <summary>
-    /// The last query of the data provider.
+    /// Contains information about the last query made by this data provider.
     /// </summary>
     public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
