@@ -1,3 +1,4 @@
+using BitzArt.Pagination;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
@@ -8,7 +9,7 @@ namespace BitzArt.Flux.MudBlazor.Tests;
 public class FluxSetDataProviderTests
 {
     [Fact]
-    public async Task OnQuery_WhenRequestCompleted_ShouldTrigger()
+    public async Task OnResult_WhenRequestCompleted_ShouldTrigger()
     {
         // Arrange
         var serviceCollection = new ServiceCollection();
@@ -54,29 +55,30 @@ public class FluxSetDataProviderTests
         Assert.NotNull(query.Parameters);
         Assert.Empty(query.Parameters);
 
-        Assert.NotNull(query.Result);
-        Assert.Equal(TestModelCount, query.Result.TotalItems);
-        Assert.Contains(query.Result.Items!, item => item.Id == 1);
-        Assert.Contains(query.Result.Items!, item => item.Id == 2);
-        Assert.Contains(query.Result.Items!, item => item.Id == 3);
+        Assert.NotNull(query.Data);
+        Assert.Equal(TestModelCount, query.Data.Total);
+        Assert.Contains(query.Data.Items!, item => item.Id == 1);
+        Assert.Contains(query.Data.Items!, item => item.Id == 2);
+        Assert.Contains(query.Data.Items!, item => item.Id == 3);
     }
 
     [Fact]
-    public async Task RestoreLastQuery_WithQuery_ShouldRestore()
+    public async Task OnResult_WhenLastQueryRestored_ShouldNotTrigger()
     {
         var loggerFactory = new LoggerFactory();
-
         var dataProvider = new FluxSetDataProvider<TestModel>(loggerFactory);
+
         var tableState = new TableState()
         {
             Page = 0,
             PageSize = 10
         };
+
         var query = new FluxSetDataPageQuery<TestModel>()
         {
             TableState = tableState,
             Parameters = [],
-            Result = new TableData<TestModel>()
+            Data = new PageResult<TestModel>()
             {
                 Items =
                 [
@@ -84,7 +86,7 @@ public class FluxSetDataProviderTests
                     new() { Id = 2, Name = "Test model 2" },
                     new() { Id = 3, Name = "Test model 3" }
                 ],
-                TotalItems = 3
+                Total = 3
             }
         };
 
@@ -94,14 +96,13 @@ public class FluxSetDataProviderTests
             triggered = true;
         };
 
-        // Act
-        dataProvider.RestoreLastQuery(query);
+        dataProvider.LastQuery = query;
 
         // Assert
         Assert.False(triggered);
-
         Assert.Equal(query, dataProvider.LastQuery);
 
+        // Act
         await dataProvider.Data.Invoke(tableState, default);
 
         // Should restore from LastQuery and not trigger OnResult
