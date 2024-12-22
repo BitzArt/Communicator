@@ -25,14 +25,20 @@ public record FluxSetDataPageQuery<TModel>
     /// <summary>
     /// Data returned by the request.
     /// </summary>
-    public PageResult<TModel> Data { get; set; }
+    public PageResult<TModel> Data { get; set; } = null!;
 
-    public FluxSetDataPageQuery(TableState tableState, object[] parameters, PageResult<TModel> data)
+    /// <summary>
+    /// Creates a new instance of <see cref="FluxSetDataPageQuery{TModel}"/>.
+    /// </summary>
+    public FluxSetDataPageQuery(TableState tableState, object[] parameters, PageResult<TModel> data) : this()
     {
         TableState = tableState;
         Parameters = parameters;
         Data = data;
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="FluxSetDataPageQuery{TModel}"/>.
+    /// </summary>
     public FluxSetDataPageQuery() { }
 }
