@@ -1,7 +1,6 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
@@ -59,19 +58,12 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
     }
 
-    public void RestoreLastQuery(object query)
-    {
-        if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
-        LastQuery = lastQuery;
-    }
-
     public async Task ResetAndReloadAsync(bool ignoreCancellation = true)
     {
         ResetPage();
         await ResetSortAndReloadAsync(ignoreCancellation);
     }
 
-    [SuppressMessage("Usage", "BL0005:Component parameter should not be set outside of its component.")]
     public async Task ResetSortAndReloadAsync(bool ignoreCancellation = true)
     {
         if (Table is null) throw new InvalidOperationException(
@@ -169,7 +161,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
     {
-        var parameters = GetParameters is not null ? GetParameters(state) : [];
+        object[] parameters = GetParameters is not null ? GetParameters(state) : [];
 
         if (ShouldReset(state, parameters))
         {
@@ -194,20 +186,16 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
         }
 
-        if (CompareWithLastRequest(state, parameters)) return LastQuery!.Result;
+        if (CompareWithLastRequest(state, parameters)) 
+            return LastQuery!.Data.ToTableData();
 
-        var currentQuery = new FluxSetDataPageQuery<TModel>()
-        {
-            TableState = state,
-            Parameters = parameters
-        };
-        var page = await SetContext.GetPageAsync(state.Page * state.PageSize, state.PageSize, parameters: parameters);
-        var result = BuildTableData(page, currentQuery);
+        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
+        var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters);
 
-        LastQuery = currentQuery;
+        LastQuery = new(state, parameters, page);
         OnResult?.Invoke(new(this, LastQuery));
 
-        return result;
+        return page.ToTableData();
     }
 
     private bool ShouldReset(TableState state, object[] newParameters)
@@ -259,7 +247,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             && ShouldResetPageOnParameters is not null
             && ShouldResetPageOnParameters!.Invoke(lastParameters, newParameters) == true;
     }
-
 
     private static bool HasOrderChanged(TableState lastState, TableState newState)
     {
@@ -324,19 +311,5 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
         // no change detected
         return true;
-    }
-
-    // TODO: Extract as extension method ?
-    private static TableData<TModel> BuildTableData(PageResult<TModel> page, FluxSetDataPageQuery<TModel> currentQuery)
-    {
-        var result = new TableData<TModel>()
-        {
-            Items = page.Data,
-            TotalItems = page.Total!.Value
-        };
-
-        currentQuery.Result = result;
-
-        return result;
     }
 }

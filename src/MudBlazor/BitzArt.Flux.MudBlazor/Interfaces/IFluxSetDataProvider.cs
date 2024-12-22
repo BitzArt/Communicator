@@ -30,13 +30,12 @@ public interface IFluxSetDataProvider<TModel>
     public event OnResultHandler<TModel>? OnResult;
 
     /// <inheritdoc cref="OnLoadingStateChanged{TModel}"/>
-    event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
+    public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
 
     /// <summary>
-    /// Restores last query.
+    /// Contains information about the last query made by this data provider.
     /// </summary>
-    /// <param name="query"></param>
-    public void RestoreLastQuery(object query);
+    public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
     /// <summary>
     /// Resets table sorting to none, resets current page to 0, and then reloads the data.
