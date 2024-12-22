@@ -169,7 +169,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
     private async Task<TableData<TModel>> GetDataInternalAsync(TableState state, CancellationToken cancellationToken)
     {
-        var parameters = GetParameters is not null ? GetParameters(state) : [];
+        object[] parameters = GetParameters is not null ? GetParameters(state) : [];
 
         if (ShouldReset(state, parameters))
         {
@@ -194,26 +194,22 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
         }
 
-        if (CompareWithLastRequest(state, parameters)) return LastQuery!.Result;
+        if (CompareWithLastRequest(state, parameters)) 
+            return LastQuery!.Data.ToTableData();
 
-        var currentQuery = new FluxSetDataPageQuery<TModel>()
-        {
-            TableState = state,
-            Parameters = parameters
-        };
-        var page = await SetContext.GetPageAsync(state.Page * state.PageSize, state.PageSize, parameters: parameters);
-        var result = BuildTableData(page, currentQuery);
+        var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
+        var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters);
 
         if (IndexItems)
         {
-            UpdateItemIndexMap(result.Items!);
-            OnItemsIndexed?.Invoke(new(this, ItemIndexMap!));
+            UpdateIndices(page.Items!);
+            OnItemsIndexed?.Invoke(new(this, Indices!));
         }
 
-        LastQuery = currentQuery;
+        LastQuery = new(state, parameters, page);
         OnResult?.Invoke(new(this, LastQuery));
 
-        return result;
+        return page.ToTableData();
     }
 
     private bool ShouldReset(TableState state, object[] newParameters)
@@ -265,7 +261,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             && ShouldResetPageOnParameters is not null
             && ShouldResetPageOnParameters!.Invoke(lastParameters, newParameters) == true;
     }
-
 
     private static bool HasOrderChanged(TableState lastState, TableState newState)
     {
@@ -332,23 +327,9 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         return true;
     }
 
-    // TODO: Extract as extension method ?
-    private static TableData<TModel> BuildTableData(PageResult<TModel> page, FluxSetDataPageQuery<TModel> currentQuery)
-    {
-        var result = new TableData<TModel>()
-        {
-            Items = page.Data,
-            TotalItems = page.Total!.Value
-        };
-
-        currentQuery.Result = result;
-
-        return result;
-    }
-
     public bool IndexItems { get; set; } = false;
 
-    public IDictionary<TModel, int>? ItemIndexMap { get; set; }
+    public IDictionary<TModel, int>? Indices { get; set; }
 
     public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
 
@@ -358,13 +339,13 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             throw new InvalidOperationException(
                 "'IndexItems' should be set to 'true' before attempting to retrieve the index of an item.");
 
-        if (ItemIndexMap is null)
+        if (Indices is null)
             throw new InvalidOperationException(
-                "'ItemIndexMap' is null. Ensure items are indexed before attempting to retrieve the index of an item.");
+                "'Indices' is null. Ensure items are indexed before attempting to retrieve the index of an item.");
 
         try
         {
-            return ItemIndexMap[item];
+            return Indices[item];
         }
         catch
         {
@@ -372,51 +353,51 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         }
     }
 
-    public void RestoreItemIndexMap(IDictionary<TModel, int> map)
+    public void RestoreIndices(IDictionary<TModel, int> indices)
     {
-        ItemIndexMap = map;
+        Indices = indices;
     }
 
-    private void UpdateItemIndexMap(IEnumerable<TModel> newItems)
+    private void UpdateIndices(IEnumerable<TModel> newItems)
     {
         if (!IndexItems)
             throw new UnreachableException();
 
         var newItemsCount = newItems.Count();
 
-        if (ItemIndexMap is null)
+        if (Indices is null)
         {
-            ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
+            Indices = CreateIndices(newItems, newItemsCount);
             return;
         }
 
-        var lastItems = LastQuery?.Result.Items;
+        var lastItems = LastQuery?.Data?.Items;
         var lastItemsCount = lastItems is not null ? lastItems.Count() : 0;
 
         if (newItemsCount > lastItemsCount)
         {
             // recreate the item index map with increased size
-            ItemIndexMap = CreateItemIndexMap(newItems, newItemsCount);
+            Indices = CreateIndices(newItems, newItemsCount);
             return;
         }
 
-        ItemIndexMap.Clear();
-        PopulateItemIndexMap(ItemIndexMap, newItems);
+        Indices.Clear();
+        PopulateIndices(Indices, newItems);
     }
 
-    private static Dictionary<TModel, int> CreateItemIndexMap(IEnumerable<TModel> items, int mapSize)
+    private static Dictionary<TModel, int> CreateIndices(IEnumerable<TModel> items, int mapSize)
     {
         var map = new Dictionary<TModel, int>(mapSize);
-        PopulateItemIndexMap(map, items);
+        PopulateIndices(map, items);
         return map;
     }
 
-    private static void PopulateItemIndexMap(IDictionary<TModel, int> map, IEnumerable<TModel> items)
+    private static void PopulateIndices(IDictionary<TModel, int> indices, IEnumerable<TModel> items)
     {
         int index = 0;
         foreach (var item in items)
         {
-            map.Add(item, index);
+            indices.Add(item, index);
             index++;
         }
     }

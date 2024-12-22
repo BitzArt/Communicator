@@ -122,7 +122,7 @@ public interface IFluxSetDataProvider<TModel>
     public int IndexOf(TModel item);
 
     /// <summary>
-    /// Restores ap of item indices.
+    /// Restores item indices.
     /// </summary>
-    public void RestoreItemIndexMap(IDictionary<TModel, int> map);
+    public void RestoreIndices(IDictionary<TModel, int> indices);
 }
