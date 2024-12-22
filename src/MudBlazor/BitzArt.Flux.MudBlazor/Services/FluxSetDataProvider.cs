@@ -1,8 +1,6 @@
 ﻿using BitzArt.Pagination;
 using Microsoft.Extensions.Logging;
 using MudBlazor;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace BitzArt.Flux.MudBlazor;
@@ -58,12 +56,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
             return DefaultTableState;
         }
-    }
-
-    public void RestoreLastQuery(object query)
-    {
-        if (query is not FluxSetDataPageQuery<TModel> lastQuery) return;
-        LastQuery = lastQuery;
     }
 
     public async Task ResetAndReloadAsync(bool ignoreCancellation = true)
@@ -200,12 +192,6 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
         var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);
         var page = await SetContext.GetPageAsync(pageRequest, parameters: parameters);
 
-        if (IndexItems)
-        {
-            UpdateIndices(page.Items!);
-            OnItemsIndexed?.Invoke(new(this, Indices!));
-        }
-
         LastQuery = new(state, parameters, page);
         OnResult?.Invoke(new(this, LastQuery));
 
@@ -325,80 +311,5 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
 
         // no change detected
         return true;
-    }
-
-    public bool IndexItems { get; set; } = false;
-
-    public IDictionary<TModel, int>? Indices { get; set; }
-
-    public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
-
-    public int IndexOf(TModel item)
-    {
-        if (!IndexItems)
-            throw new InvalidOperationException(
-                "'IndexItems' should be set to 'true' before attempting to retrieve the index of an item.");
-
-        if (Indices is null)
-            throw new InvalidOperationException(
-                "'Indices' is null. Ensure items are indexed before attempting to retrieve the index of an item.");
-
-        try
-        {
-            return Indices[item];
-        }
-        catch
-        {
-            return -1;
-        }
-    }
-
-    public void RestoreIndices(IDictionary<TModel, int> indices)
-    {
-        Indices = indices;
-    }
-
-    private void UpdateIndices(IEnumerable<TModel> newItems)
-    {
-        if (!IndexItems)
-            throw new UnreachableException();
-
-        var newItemsCount = newItems.Count();
-
-        if (Indices is null)
-        {
-            Indices = CreateIndices(newItems, newItemsCount);
-            return;
-        }
-
-        var lastItems = LastQuery?.Data?.Items;
-        var lastItemsCount = lastItems is not null ? lastItems.Count() : 0;
-
-        if (newItemsCount > lastItemsCount)
-        {
-            // recreate the item index map with increased size
-            Indices = CreateIndices(newItems, newItemsCount);
-            return;
-        }
-
-        Indices.Clear();
-        PopulateIndices(Indices, newItems);
-    }
-
-    private static Dictionary<TModel, int> CreateIndices(IEnumerable<TModel> items, int mapSize)
-    {
-        var map = new Dictionary<TModel, int>(mapSize);
-        PopulateIndices(map, items);
-        return map;
-    }
-
-    private static void PopulateIndices(IDictionary<TModel, int> indices, IEnumerable<TModel> items)
-    {
-        int index = 0;
-        foreach (var item in items)
-        {
-            indices.Add(item, index);
-            index++;
-        }
     }
 }

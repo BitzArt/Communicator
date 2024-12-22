@@ -33,10 +33,9 @@ public interface IFluxSetDataProvider<TModel>
     public event OnLoadingStateChanged<TModel>? OnLoadingStateChanged;
 
     /// <summary>
-    /// Restores last query.
+    /// The last query of the data provider.
     /// </summary>
-    /// <param name="query"></param>
-    public void RestoreLastQuery(object query);
+    public FluxSetDataPageQuery<TModel>? LastQuery { get; set; }
 
     /// <summary>
     /// Resets table sorting to none, resets current page to 0, and then reloads the data.
@@ -103,26 +102,4 @@ public interface IFluxSetDataProvider<TModel>
     /// Gets data from the server.
     /// </summary>
     public Task<TableData<TModel>> GetDataAsync(TableState state, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Whether to index items.
-    /// </summary>
-    public bool IndexItems { get; set; }
-
-    /// <summary>
-    /// Event triggered when a request was completed and resulting items were indexed.<br/>
-    /// The event occurs if <see cref="IndexItems"/> is set to <see langword="true"/>.
-    /// </summary>
-    public event OnItemsIndexedHandler<TModel>? OnItemsIndexed;
-
-    /// <summary>
-    /// Returns the index of the given <paramref name="item"/>.<br/>
-    /// Items are indexed if <see cref="IndexItems"/> is set to <see langword="true"/>.
-    /// </summary>
-    public int IndexOf(TModel item);
-
-    /// <summary>
-    /// Restores item indices.
-    /// </summary>
-    public void RestoreIndices(IDictionary<TModel, int> indices);
 }
