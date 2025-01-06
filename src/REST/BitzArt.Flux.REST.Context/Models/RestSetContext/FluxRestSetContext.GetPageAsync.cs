@@ -16,7 +16,6 @@ internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<T
     private async Task<PageResult<TModel>> GetPageAsyncInternal(PageRequest pageRequest, FluxRequestParameters? parameters, CancellationToken cancellationToken)
     {
         var parsed = GetPageEndpointFullPath(pageRequest, parameters);
-
         _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parsed.Result, parsed.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parsed.Result);

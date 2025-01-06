@@ -14,7 +14,6 @@ internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<T
     private async Task<IEnumerable<TModel>> GetAllAsyncInternal(FluxRequestParameters? parameters, CancellationToken cancellationToken)
     {
         var parsed = GetEndpointFullPath(parameters);
-
         _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, parsed.Result, parsed.Log);
 
         var message = new HttpRequestMessage(HttpMethod.Get, parsed.Result);

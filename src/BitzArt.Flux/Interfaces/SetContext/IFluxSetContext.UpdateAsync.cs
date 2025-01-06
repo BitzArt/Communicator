@@ -16,6 +16,18 @@ public partial interface INewFluxSetContext<TModel>
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, FluxRequestParameters, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TModel> UpdateAsync(TModel model, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TModel> UpdateAsync(TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc cref="UpdateAsync(object?, TModel, FluxRequestParameters, bool, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TResponse>(TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 }
 
 public partial interface INewFluxSetContext<TModel, TKey> : INewFluxSetContext<TModel>
