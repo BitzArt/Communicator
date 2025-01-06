@@ -51,4 +51,18 @@ public abstract class NewFluxSetContext<TModel, TKey> : INewFluxSetContext<TMode
 
     /// <inheritdoc/>
     public abstract Task<TModel> GetAsync(TKey? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public virtual Task<TModel> AddAsync(TModel model, CancellationToken cancellationToken = default)
+        => AddAsync<TModel>(model, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public virtual Task<TModel> AddAsync(TModel model, FluxRequestParameters parameters, CancellationToken cancellationToken = default)
+        => AddAsync<TModel>(model, parameters, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }
