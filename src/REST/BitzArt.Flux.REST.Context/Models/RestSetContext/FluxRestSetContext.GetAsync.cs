@@ -2,7 +2,7 @@
 
 namespace BitzArt.Flux.REST;
 
-internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<TModel, TKey>
+internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
     where TModel : class
 {
     public override Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default)

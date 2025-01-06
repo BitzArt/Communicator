@@ -1,4 +1,5 @@
 using BitzArt.Flux.REST;
+using BitzArt.Pagination;
 using RichardSzalay.MockHttp;
 using System.Net;
 using System.Net.Http.Json;
@@ -48,7 +49,8 @@ public class MockedRestServiceTests
         ((FluxRestSetContext<TestModel, int>)setContext)
           .SetOptions.EndpointOptions.Path = "model{query}";
 
-        var result = await setContext.GetAllAsync(query);
+        var parameters = new FluxRequestParameters(query);
+        var result = await setContext.GetAllAsync(parameters);
 
         Assert.NotNull(result);
         if (setCount > 0) Assert.True(result.Any());
@@ -172,10 +174,12 @@ public class MockedRestServiceTests
             return $"model/{id}?changeName={parameters!.First()}";
         };
 
-        var resultWithParameterFalse = await setContext.GetAsync(id, false);
+        var parameters = new FluxRequestParameters(false);
+        var resultWithParameterFalse = await setContext.GetAsync(id, parameters);
         Assert.Equal(defaultName, resultWithParameterFalse.Name);
 
-        var resultWithParameterTrue = await setContext.GetAsync(id, true);
+        parameters = new FluxRequestParameters(true);
+        var resultWithParameterTrue = await setContext.GetAsync(id, parameters);
         Assert.Equal(changedName, resultWithParameterTrue.Name);
     }
 
@@ -194,7 +198,10 @@ public class MockedRestServiceTests
 
         setContext.SetOptions.EndpointOptions.Path = "test-{number}";
 
-        var result = await setContext.GetPageAsync(0, 10, 1);
+        var pageRequest = new PageRequest(0, 10);
+        var parameters = new FluxRequestParameters(1);
+        var result = await setContext.GetPageAsync(pageRequest, parameters);
+
         Assert.NotNull(result);
         Assert.Equal(10, result.Items!.Count());
     }
@@ -214,7 +221,9 @@ public class MockedRestServiceTests
 
         setContext.SetOptions.PageEndpointOptions.Path = "{parentId}/test";
 
-        var result = await setContext.GetPageAsync(0, 10, 1);
+        var pageRequest = new PageRequest(0, 10);
+        var parameters = new FluxRequestParameters(1);
+        var result = await setContext.GetPageAsync(pageRequest, parameters);
         Assert.NotNull(result);
         Assert.Equal(10, result.Items!.Count());
     }
@@ -370,7 +379,8 @@ public class MockedRestServiceTests
 
         var model = new TestModel { Id = modelId, Name = name };
 
-        var result = await setContext.UpdateAsync(model, partial: false, modelId);
+        var parameters = new FluxRequestParameters(modelId);
+        var result = await setContext.UpdateAsync(model, parameters, partial: false);
 
         Assert.NotNull(result);
         Assert.Equal(modelId, result.Id);
@@ -422,7 +432,8 @@ public class MockedRestServiceTests
 
         var model = new TestModel { Id = modelId, Name = name };
 
-        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(model, partial: false, modelId);
+        var parameters = new FluxRequestParameters(modelId);
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(model, parameters, partial: false);
 
         Assert.NotNull(result);
         Assert.Equal(modelId, result.Id);

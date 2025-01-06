@@ -3,12 +3,12 @@ using System.Text.Json;
 
 namespace BitzArt.Flux.REST;
 
-internal partial class NewFluxRestSetContext<TModel, TKey>(
-    IFluxRestSetOptions<TModel> setOptions,
-    FluxRestServiceOptions serviceOptions,
+internal partial class FluxRestSetContext<TModel, TKey>(
     HttpClient httpClient,
-    ILogger logger)
-    : NewFluxSetContext<TModel, TKey>
+    FluxRestServiceOptions serviceOptions,
+    ILogger logger,
+    IFluxRestSetOptions<TModel> setOptions)
+    : FluxSetContext<TModel, TKey>
      where TModel : class
 {
     internal IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;

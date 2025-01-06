@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public partial interface INewFluxSetContext<TModel>
+public partial interface IFluxSetContext<TModel>
     where TModel : class
 {
     /// <summary>

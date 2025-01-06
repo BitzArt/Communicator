@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BitzArt.Flux.REST;
 
-internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<TModel, TKey>
+internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
     where TModel : class
 {
     public override async Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken = default)

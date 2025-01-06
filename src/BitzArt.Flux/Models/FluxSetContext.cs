@@ -11,70 +11,116 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     // ============== GET ALL ==============
 
     /// <inheritdoc/>
-    public abstract Task<IEnumerable<TModel>> GetAllAsync(params object[]? parameters);
-
-    // ============== GET (Single) ==============
+    public abstract Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public Task<TModel> GetAsync(object? id = null, params object[]? parameters)
+    public abstract Task<IEnumerable<TModel>> GetAllAsync(FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+
+    // ============== GET PAGE =============
+
+    /// <inheritdoc/>
+    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken = default)
+        => GetPageAsync(new PageRequest(offset, limit), cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, FluxRequestParameters parameters, CancellationToken cancellationToken = default)
+        => GetPageAsync(new PageRequest(offset, limit), parameters, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+
+    // ============== GET (Single) =========
+
+    /// <inheritdoc/>
+    public virtual Task<TModel> GetAsync(object? id, CancellationToken cancellationToken = default)
     {
-        if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type");
-        return GetAsync(idTyped, parameters);
+        if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type.");
+
+        return GetAsync(idTyped, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public abstract Task<TModel> GetAsync(TKey? id, params object[]? parameters);
-
-    // ============== GET PAGE ==============
+    public abstract Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, params object[]? parameters)
-        => GetPageAsync(new PageRequest(offset, limit), parameters);
-
-    /// <inheritdoc/>
-    public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, params object[]? parameters);
-
-    // ============== ADD ==============
-
-    /// <inheritdoc/>
-    public virtual Task<TModel> AddAsync(TModel model, params object[]? parameters)
-        => AddAsync<TModel>(model, parameters);
-
-    /// <inheritdoc/>
-    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, params object[]? parameters);
-
-    // ============== UPDATE ==============
-
-    /// <inheritdoc/>
-    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(object? id, TModel model, bool partial, params object[]? parameters)
+    public virtual Task<TModel> GetAsync(object? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default)
     {
-        if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type");
-        return UpdateAsync<TModel>(idTyped, model, partial, parameters);
+        if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type.");
+
+        return GetAsync(idTyped, parameters, cancellationToken);
     }
 
     /// <inheritdoc/>
-    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(TModel model, bool partial, params object[]? parameters)
-        => UpdateAsync<TModel>(model, partial, parameters);
+    public abstract Task<TModel> GetAsync(TKey? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+
+    // ============== ADD ==================
 
     /// <inheritdoc/>
-    Task<TResponse> IFluxSetContext<TModel>.UpdateAsync<TResponse>(object? id, TModel model, bool partial, params object[]? parameters)
-        => UpdateAsync<TResponse>(Cast<TKey>(id), model, partial, parameters);
+    public virtual Task<TModel> AddAsync(TModel model, CancellationToken cancellationToken = default)
+        => AddAsync<TModel>(model, cancellationToken);
 
     /// <inheritdoc/>
-    Task<TModel> IFluxSetContext<TModel, TKey>.UpdateAsync(TKey? id, TModel model, bool partial, params object[]? parameters)
-        => UpdateAsync<TModel>(id, model, partial, parameters);
+    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, params object[]? parameters);
+    public virtual Task<TModel> AddAsync(TModel model, FluxRequestParameters parameters, CancellationToken cancellationToken = default)
+        => AddAsync<TModel>(model, parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, params object[]? parameters);
+    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+
+    // ============== UPDATE BY ID =========
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(object? id, TModel model, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TModel>(Cast<TKey>(id), model, partial, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel>.UpdateAsync<TResponse>(object? id, TModel model, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TResponse>(Cast<TKey>(id), model, partial, cancellationToken);
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel, TKey>.UpdateAsync(TKey? id, TModel model, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TModel>(id, model, partial, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(object? id, TModel model, FluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TModel>(Cast<TKey>(id), model, parameters, partial, cancellationToken);
+
+    Task<TResponse> IFluxSetContext<TModel>.UpdateAsync<TResponse>(object? id, TModel model, FluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TResponse>(Cast<TKey>(id), model, parameters, partial, cancellationToken);
+
+    /// <inheritdoc/>
+    Task<TModel> IFluxSetContext<TModel, TKey>.UpdateAsync(TKey? id, TModel model, FluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TModel>(id, model, parameters, partial, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+
+    // ============== UPDATE ===============
+
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(TModel model, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TModel>(model, partial, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, CancellationToken cancellationToken = default);
+
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(TModel model, FluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+        => UpdateAsync<TModel>(model, parameters, partial, cancellationToken);
+
+    /// <inheritdoc/>
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 
     private static TResult Cast<TResult>(object? value)
     {
-        if (value is not TResult result)
-            throw new InvalidOperationException($"Invalid key type. Expected {typeof(TResult).Name} but got {value?.GetType().Name ?? "null"}");
+        if (value is not TResult casted)
+            throw new InvalidOperationException($"Invalid key type. Expected '{typeof(TResult).Name}' but got '{value?.GetType().Name ?? "null"}'.");
 
-        return result;
+        return casted;
     }
 }

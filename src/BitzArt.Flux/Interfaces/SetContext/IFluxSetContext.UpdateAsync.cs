@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public partial interface INewFluxSetContext<TModel>
+public partial interface IFluxSetContext<TModel>
     where TModel : class
 {
     /// <summary>
@@ -30,18 +30,18 @@ public partial interface INewFluxSetContext<TModel>
     public Task<TResponse> UpdateAsync<TResponse>(TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 }
 
-public partial interface INewFluxSetContext<TModel, TKey> : INewFluxSetContext<TModel>
+public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     where TModel : class
 {
-    /// <inheritdoc cref="INewFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="INewFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="INewFluxSetContext{TModel}.UpdateAsync(object?, TModel, FluxRequestParameters, bool, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, FluxRequestParameters, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync(TKey? id, TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="INewFluxSetContext{TModel}.UpdateAsync(object?, TModel, FluxRequestParameters, bool, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, FluxRequestParameters, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, FluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 }

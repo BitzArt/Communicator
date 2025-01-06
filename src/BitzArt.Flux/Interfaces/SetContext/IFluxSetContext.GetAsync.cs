@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public partial interface INewFluxSetContext<TModel>
+public partial interface IFluxSetContext<TModel>
     where TModel : class
 {
     /// <summary>
@@ -12,12 +12,12 @@ public partial interface INewFluxSetContext<TModel>
     public Task<TModel> GetAsync(object? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }
 
-public partial interface INewFluxSetContext<TModel, TKey> : INewFluxSetContext<TModel>
+public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     where TModel : class
 {
-    /// <inheritdoc cref="INewFluxSetContext{TModel}.GetAsync(object?, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, CancellationToken)"/>
     public Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="INewFluxSetContext{TModel}.GetAsync(object?, FluxRequestParameters, CancellationToken)"/>
+    /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, FluxRequestParameters, CancellationToken)"/>
     public Task<TModel> GetAsync(TKey? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }
