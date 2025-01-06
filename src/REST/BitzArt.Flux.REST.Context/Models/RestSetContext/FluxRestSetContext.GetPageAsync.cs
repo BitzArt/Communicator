@@ -15,11 +15,11 @@ internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<T
 
     private async Task<PageResult<TModel>> GetPageAsyncInternal(PageRequest pageRequest, FluxRequestParameters? parameters, CancellationToken cancellationToken)
     {
-        var path = GetPageEndpointFullPath(pageRequest, parameters);
+        var parsed = GetPageEndpointFullPath(pageRequest, parameters);
 
-        _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
+        _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parsed.Result, parsed.Log);
 
-        var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
+        var message = new HttpRequestMessage(HttpMethod.Get, parsed.Result);
         var result = await HandleRequestAsync<PageResult<TModel>>(message, cancellationToken);
 
         return result;
@@ -28,8 +28,8 @@ internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<T
     private RequestUrlParameterParsingResult GetPageEndpointFullPath(PageRequest pageRequest, FluxRequestParameters? parameters)
     {
         var path = GetPageEndpoint();
-        var parse = GetFullPath(path, true, parameters);
-        path = parse.Result;
+        var parsed = GetFullPath(path, true, parameters);
+        path = parsed.Result;
 
         var queryIndex = path.IndexOf('?');
 
@@ -43,9 +43,9 @@ internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<T
         if (queryIndex != -1) path = path[..queryIndex];
         path = path + "?" + query.ToString();
 
-        parse.Result = path;
+        parsed.Result = path;
 
-        return parse;
+        return parsed;
     }
 
     private string GetPageEndpoint()

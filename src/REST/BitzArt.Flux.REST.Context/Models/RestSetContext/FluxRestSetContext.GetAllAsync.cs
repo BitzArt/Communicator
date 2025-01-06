@@ -13,11 +13,11 @@ internal partial class NewFluxRestSetContext<TModel, TKey> : NewFluxSetContext<T
 
     private async Task<IEnumerable<TModel>> GetAllAsyncInternal(FluxRequestParameters? parameters, CancellationToken cancellationToken)
     {
-        var path = GetEndpointFullPath(parameters);
+        var parsed = GetEndpointFullPath(parameters);
 
-        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, path.Result, path.Log);
+        _logger.LogInformation("GetAll {type}: {route}{parsingLog}", typeof(TModel).Name, parsed.Result, parsed.Log);
 
-        var message = new HttpRequestMessage(HttpMethod.Get, path.Result);
+        var message = new HttpRequestMessage(HttpMethod.Get, parsed.Result);
         var result = await HandleRequestAsync<IEnumerable<TModel>>(message, cancellationToken);
 
         return result;

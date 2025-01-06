@@ -27,4 +27,28 @@ public abstract class NewFluxSetContext<TModel, TKey> : INewFluxSetContext<TMode
 
     /// <inheritdoc/>
     public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public virtual Task<TModel> GetAsync(object? id, CancellationToken cancellationToken = default)
+    {
+        if (id is not TKey idTyped)
+            throw new InvalidOperationException("Invalid key type.");
+
+        return GetAsync(idTyped, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public abstract Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default);
+
+    /// <inheritdoc/>
+    public virtual Task<TModel> GetAsync(object? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default)
+    {
+        if (id is not TKey idTyped)
+            throw new InvalidOperationException("Invalid key type.");
+
+        return GetAsync(idTyped, parameters, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public abstract Task<TModel> GetAsync(TKey? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }

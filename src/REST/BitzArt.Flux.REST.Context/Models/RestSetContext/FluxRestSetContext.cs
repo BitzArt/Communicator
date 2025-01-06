@@ -25,6 +25,32 @@ internal partial class NewFluxRestSetContext<TModel, TKey>(
         return GetFullPath(endpoint, true, parameters);
     }
 
+    private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, FluxRequestParameters? parameters)
+    {
+        if (SetOptions.IdEndpointOptions.GetPathFunc is not null)
+        {
+            if (id is null)
+            {
+                var pathFunc = SetOptions.IdEndpointOptions.GetPathFunc!;
+                return GetFullPath(pathFunc(id, parameters?.Parameters), false, parameters);
+            }
+
+            if (id is not TKey idCasted) 
+                throw new ArgumentException($"Id must be of type {typeof(TKey).Name}.");
+
+            var idEndpoint = SetOptions.IdEndpointOptions.GetPathFunc(idCasted, parameters?.Parameters);
+            return GetFullPath(idEndpoint, false, parameters);
+        }
+        else
+        {
+            var idEndpoint = SetOptions.EndpointOptions.Path is not null 
+                ? Path.Combine(SetOptions.EndpointOptions.Path, id!.ToString()!) 
+                : id!.ToString()!;
+            
+            return GetFullPath(idEndpoint, true, parameters);
+        }
+    }
+
     private string GetEndpoint()
     {
         if (SetOptions.EndpointOptions.Path is null) return string.Empty;
