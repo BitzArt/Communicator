@@ -6,7 +6,7 @@ namespace BitzArt.Flux;
 
 internal partial class RequestParameterParsingUtility
 {
-    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, object[]? parameters)
+    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, object?[]? parameters)
     {
         var logBuilder = new StringBuilder();
 
@@ -16,7 +16,9 @@ internal partial class RequestParameterParsingUtility
         if (parameters is null) throw new ParametersNotFoundException();
 
         var requiredCount = matches.Count;
-        var foundCount = parameters.Length;
+
+        var foundParameters = parameters.Where(x => x is not null).ToArray();
+        var foundCount = foundParameters.Length;
 
         if (requiredCount != foundCount) throw new ParameterCountDidNotMatchException(foundCount, requiredCount);
 
@@ -27,7 +29,7 @@ internal partial class RequestParameterParsingUtility
         {
             var match = matches[counter];
             var paramName = match.Groups[1].Value;
-            var value = parameters[counter].ToString();
+            var value = foundParameters[counter]!.ToString();
             result = result.Replace(match.Value, value);
 
             if (counter > 0) logBuilder.Append("; ");
