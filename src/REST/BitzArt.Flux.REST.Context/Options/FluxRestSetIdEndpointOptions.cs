@@ -4,9 +4,9 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey>
     : FluxRestSetEndpointOptions<TModel, TKey>, IFluxRestSetIdEndpointOptions<TModel>
     where TModel : class
 {
-    internal Func<TKey?, object[]?, string>? GetPathFunc { get; set; }
+    internal Func<TKey?, IFluxRequestParameters, string>? GetPathFunc { get; set; }
 
-    Func<object?, object[]?, string>? IFluxRestSetIdEndpointOptions<TModel>.GetPathFunc
+    Func<object?, IFluxRequestParameters, string>? IFluxRestSetIdEndpointOptions<TModel>.GetPathFunc
     {
         get => GetPathFunc is null ? null : (key, parameters) =>
         {

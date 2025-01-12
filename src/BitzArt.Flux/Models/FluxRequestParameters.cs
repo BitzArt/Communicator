@@ -1,11 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public record FluxRequestParameters
+public class FluxRequestParameters(params object?[] parameters) : IFluxRequestParameters
 {
-    public object?[] Parameters;
-
-    public FluxRequestParameters(params object?[] parameters)
-    {
-        Parameters = parameters;
-    }
+    public object?[] Parameters = parameters;
 }

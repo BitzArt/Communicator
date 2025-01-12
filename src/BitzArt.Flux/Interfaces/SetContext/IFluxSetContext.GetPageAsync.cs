@@ -11,11 +11,11 @@ public partial interface IFluxSetContext<TModel>
     public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetPageAsync(int, int, CancellationToken)"/>
-    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetPageAsync(int, int, CancellationToken)"/>
     public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="GetPageAsync(int, int, FluxRequestParameters, CancellationToken)"/>
-    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="GetPageAsync(int, int, IFluxRequestParameters, CancellationToken)"/>
+    public Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }

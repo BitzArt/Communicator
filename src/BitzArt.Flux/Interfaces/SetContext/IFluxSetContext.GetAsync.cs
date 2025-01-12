@@ -9,7 +9,7 @@ public partial interface IFluxSetContext<TModel>
     public Task<TModel> GetAsync(object? id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetAsync(object?, CancellationToken)"/>
-    public Task<TModel> GetAsync(object? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    public Task<TModel> GetAsync(object? id, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }
 
 public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
@@ -18,6 +18,6 @@ public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, CancellationToken)"/>
     public Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, FluxRequestParameters, CancellationToken)"/>
-    public Task<TModel> GetAsync(TKey? id, FluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, IFluxRequestParameters, CancellationToken)"/>
+    public Task<TModel> GetAsync(TKey? id, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
 }

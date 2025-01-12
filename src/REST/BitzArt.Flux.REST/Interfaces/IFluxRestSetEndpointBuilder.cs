@@ -15,4 +15,10 @@ public interface IFluxRestSetEndpointBuilder<TModel, TKey> : IFluxRestSetBuilder
     where TModel : class
 {
     internal FluxRestSetEndpointOptions<TModel, TKey> EndpointOptions { get; }
+
+    /// <inheritdoc cref="WithParametersExtension.WithParameters{TModel,TKey,TRequestParameters}"/>
+    public IFluxRestSetEndpointBuilder<TModel, TKey> WithParameters<TRequestParameters>(
+        Func<TRequestParameters, IFluxRequestParameters> getParameters)
+        where TRequestParameters : IFluxRequestParameters
+        => this.WithParameters<TModel, TKey, TRequestParameters>(getParameters);
 }

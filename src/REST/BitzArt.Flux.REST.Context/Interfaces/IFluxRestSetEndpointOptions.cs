@@ -13,4 +13,8 @@ internal interface IFluxRestSetEndpointOptions<TModel>
     /// Http method to use when calling the endpoint.
     /// </summary>
     public HttpMethod? Method { get; internal set; }
+
+    public Type? RequestParametersType { get; internal set; }
+
+    public Func<IFluxRequestParameters, IFluxRequestParameters>? GetParametersFunc { get; internal set; }
 }

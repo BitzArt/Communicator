@@ -44,7 +44,7 @@ public static class WithIdEndpointExtension
     }
 
     /// <inheritdoc cref="WithIdEndpoint{TModel,TKey}(IFluxRestSetBuilder{TModel,TKey},string)"/>
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TKey?, object[]?, string> getEndpoint)
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, Func<TKey?, IFluxRequestParameters, string> getEndpoint)
         where TModel : class
     {
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, parameters);

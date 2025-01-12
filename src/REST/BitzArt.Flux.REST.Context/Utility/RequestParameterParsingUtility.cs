@@ -17,8 +17,7 @@ internal partial class RequestParameterParsingUtility
 
         var requiredCount = matches.Count;
 
-        var foundParameters = parameters.Where(x => x is not null).ToArray();
-        var foundCount = foundParameters.Length;
+        var foundCount = parameters.Length;
 
         if (requiredCount != foundCount) throw new ParameterCountDidNotMatchException(foundCount, requiredCount);
 
@@ -29,7 +28,7 @@ internal partial class RequestParameterParsingUtility
         {
             var match = matches[counter];
             var paramName = match.Groups[1].Value;
-            var value = foundParameters[counter]!.ToString();
+            var value = parameters[counter]!.ToString();
             result = result.Replace(match.Value, value);
 
             if (counter > 0) logBuilder.Append("; ");

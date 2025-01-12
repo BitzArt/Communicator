@@ -8,4 +8,8 @@ internal class FluxRestSetEndpointOptions<TModel, TKey> : IFluxRestSetEndpointOp
 
     /// <inheritdoc/>
     public HttpMethod? Method { get; set; }
+
+    public Type? RequestParametersType { get; set; }
+
+    public Func<IFluxRequestParameters, IFluxRequestParameters>? GetParametersFunc { get; set; }
 }
