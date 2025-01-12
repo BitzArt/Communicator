@@ -15,7 +15,7 @@ public static class WithParametersExtension
         where TRequestParameters : IFluxRequestParameters
     {
         builder.EndpointOptions.RequestParametersType = typeof(TRequestParameters);
-        builder.EndpointOptions.GetParametersFunc = (parameters) => getParameters((TRequestParameters)parameters);
+        builder.EndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TRequestParameters)parameters);
 
         return builder;
     }
@@ -33,7 +33,7 @@ public static class WithParametersExtension
         where TRequestParameters : IFluxRequestParameters
     {
         builder.EndpointOptions.RequestParametersType = typeof(TRequestParameters);
-        builder.EndpointOptions.GetParametersFunc = (parameters) => getParameters((TRequestParameters)parameters);
+        builder.EndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TRequestParameters)parameters);
 
         return builder;
     }
