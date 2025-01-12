@@ -4,36 +4,33 @@ public static class WithParametersExtension
 {
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey>(
         this IFluxRestSetEndpointBuilder<TModel, TKey> builder,
-        Func<FluxRequestParameters, IFluxRequestParameters> getParameters)
+        Func<FluxRestRequestParameters, FluxRestRequestParameters> getParameters)
         where TModel : class
-        => builder.WithParameters<TModel, TKey, FluxRequestParameters>(getParameters);
+        => builder.WithParameters<TModel, TKey, FluxRestRequestParameters, FluxRestRequestParameters>(getParameters);
 
-    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey, TRequestParameters>(
+    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey, TInputParameters>(
         this IFluxRestSetEndpointBuilder<TModel, TKey> builder,
-        Func<TRequestParameters, IFluxRequestParameters> getParameters)
+        Func<TInputParameters, FluxRestRequestParameters> getParameters)
         where TModel : class
-        where TRequestParameters : IFluxRequestParameters
+        where TInputParameters : IFluxRequestParameters
+        => builder.WithParameters<TModel, TKey, TInputParameters, FluxRestRequestParameters>(getParameters);
+
+    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey, TOutputParameters>(
+        this IFluxRestSetEndpointBuilder<TModel, TKey> builder,
+        Func<FluxRestRequestParameters, TOutputParameters> getParameters)
+        where TModel : class
+        where TOutputParameters : IFluxRestRequestParameters
+        => builder.WithParameters<TModel, TKey, FluxRestRequestParameters, TOutputParameters>(getParameters);
+
+    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey, TInputParameters, TOutputParameters>(
+        this IFluxRestSetEndpointBuilder<TModel, TKey> builder,
+        Func<TInputParameters, TOutputParameters> getParameters)
+        where TModel : class
+        where TInputParameters : IFluxRequestParameters
+        where TOutputParameters : IFluxRestRequestParameters
     {
-        builder.EndpointOptions.RequestParametersType = typeof(TRequestParameters);
-        builder.EndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TRequestParameters)parameters);
-
-        return builder;
-    }
-
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey>(
-        this IFluxRestSetIdEndpointBuilder<TModel, TKey> builder,
-        Func<FluxRequestParameters, IFluxRequestParameters> getParameters)
-        where TModel : class
-        => builder.WithParameters<TModel, TKey, FluxRequestParameters>(getParameters);
-
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithParameters<TModel, TKey, TRequestParameters>(
-        this IFluxRestSetIdEndpointBuilder<TModel, TKey> builder,
-        Func<TRequestParameters, IFluxRequestParameters> getParameters)
-        where TModel : class
-        where TRequestParameters : IFluxRequestParameters
-    {
-        builder.EndpointOptions.RequestParametersType = typeof(TRequestParameters);
-        builder.EndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TRequestParameters)parameters);
+        builder.EndpointOptions.InputParametersType = typeof(TInputParameters);
+        builder.EndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return builder;
     }

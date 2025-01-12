@@ -1,6 +1,20 @@
 ﻿namespace BitzArt.Flux;
 
-public class FluxRequestParameters(params object?[] parameters) : IFluxRequestParameters
+public class FluxRequestParameters : FluxRequestParameters<object?>
 {
-    public object?[] Parameters = parameters;
+}
+
+public class FluxRequestParameters<T> : IFluxRequestParameters<T>
+{
+    public ICollection<T> Parameters { get; init; }
+
+    public FluxRequestParameters(params T[] parameters) : this()
+    {
+        Parameters = parameters;
+    }
+
+    public FluxRequestParameters()
+    {
+        
+    }
 }

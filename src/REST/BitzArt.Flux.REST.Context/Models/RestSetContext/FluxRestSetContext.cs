@@ -36,7 +36,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
             }
 
             if (id is not TKey idCasted) 
-                throw new ArgumentException($"Id must be of type {typeof(TKey).Name}.");
+                throw new ArgumentException($"Id must be of type '{typeof(TKey).Name}'.");
 
             var idEndpoint = SetOptions.IdEndpointOptions.GetPathFunc(idCasted, parameters?.Parameters);
             return GetFullPath(idEndpoint, false, parameters);
