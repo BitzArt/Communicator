@@ -1,4 +1,6 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.REST;
+
+namespace BitzArt.Flux;
 
 /// <summary>
 /// Extension methods for configuring default set endpoint in <see cref="IFluxRestSetBuilder{TModel, TKey}"/>
@@ -11,11 +13,11 @@ public static class WithEndpointExtension
     /// <returns>
     /// The <see cref="IFluxRestSetBuilder{TModel, TKey}"/> with the endpoint configured
     /// </returns>
-    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string endpoint)
+    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string endpoint)
         where TModel : class
     {
         builder.SetOptions.EndpointOptions.Path = endpoint;
 
-        return builder;
+        return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
 }
