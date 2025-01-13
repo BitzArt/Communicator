@@ -11,12 +11,7 @@ public static class WithPageEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-    {
-        builder.SetOptions.PageEndpointOptions.Path = endpoint;
-        builder.SetOptions.PageEndpointOptions.ParametersType = null;
-
-        return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.PageEndpointOptions);
-    }
+        => builder.WithPageEndpoint<TModel, TKey, FluxRequestParameters>(endpoint);
 
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
@@ -24,8 +19,9 @@ public static class WithPageEndpointExtension
         where TModel : class
         where TParameters : IFluxRequestParameters
     {
-        builder.SetOptions.PageEndpointOptions.Path = endpoint;
         builder.SetOptions.PageEndpointOptions.ParametersType = typeof(TParameters);
+        builder.SetOptions.PageEndpointOptions.Path = endpoint;
+        builder.SetOptions.PageEndpointOptions.GetRequestParametersFunc = null;
 
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.PageEndpointOptions);
     }
@@ -58,15 +54,15 @@ public static class WithPageEndpointExtension
     /// The <see cref="IFluxRestSetEndpointBuilder{TModel,TKey}"/> with the page endpoint configured
     /// </returns>
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(
-        this IFluxRestSetBuilder<TModel, TKey> builder, 
+        this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
         Func<TInputParameters, TOutputParameters> getParameters)
         where TModel : class
         where TInputParameters : IFluxRequestParameters
         where TOutputParameters : IFluxRestRequestParameters
     {
-        builder.SetOptions.PageEndpointOptions.Path = endpoint;
         builder.SetOptions.PageEndpointOptions.ParametersType = typeof(TInputParameters);
+        builder.SetOptions.PageEndpointOptions.Path = endpoint;
         builder.SetOptions.PageEndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.PageEndpointOptions);

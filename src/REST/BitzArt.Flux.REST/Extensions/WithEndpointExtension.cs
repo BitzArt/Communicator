@@ -11,12 +11,7 @@ public static class WithEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-    {
-        builder.SetOptions.EndpointOptions.Path = endpoint;
-        builder.SetOptions.EndpointOptions.ParametersType = null;
-
-        return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
-    }
+        => builder.WithEndpoint<TModel, TKey, FluxRequestParameters>(endpoint);
 
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
@@ -24,8 +19,9 @@ public static class WithEndpointExtension
         where TModel : class
         where TParameters : IFluxRequestParameters
     {
-        builder.SetOptions.EndpointOptions.Path = endpoint;
         builder.SetOptions.EndpointOptions.ParametersType = typeof(TParameters);
+        builder.SetOptions.EndpointOptions.Path = endpoint;
+        builder.SetOptions.EndpointOptions.GetRequestParametersFunc = null;
 
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -59,11 +55,10 @@ public static class WithEndpointExtension
         where TInputParameters : IFluxRequestParameters
         where TOutputParameters : IFluxRestRequestParameters
     {
-        builder.SetOptions.EndpointOptions.Path = endpoint;
         builder.SetOptions.EndpointOptions.ParametersType = typeof(TInputParameters);
+        builder.SetOptions.EndpointOptions.Path = endpoint;
         builder.SetOptions.EndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
-        var endpointBuilder = new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
 }
