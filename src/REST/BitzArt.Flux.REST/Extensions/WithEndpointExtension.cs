@@ -3,16 +3,28 @@
 namespace BitzArt.Flux;
 
 /// <summary>
-/// Extension methods for configuring default set endpoint in <see cref="IFluxRestSetBuilder{TModel, TKey}"/>
+/// Extension methods for configuring the default endpoint of a set.
 /// </summary>
 public static class WithEndpointExtension
 {
+    /// <summary>
+    /// Configures the default endpoint for the <see cref="IFluxRestSetBuilder{TModel, TKey}"/>.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="IFluxRestSetBuilder{TModel, TKey}"/> with the endpoint configured.
+    /// </returns>
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
         => builder.WithEndpoint<TModel, TKey, FluxRequestParameters>(endpoint);
 
+    /// <summary>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
@@ -26,6 +38,12 @@ public static class WithEndpointExtension
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
 
+    /// <summary>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
@@ -33,6 +51,12 @@ public static class WithEndpointExtension
         where TModel : class
         => builder.WithEndpoint<TModel, TKey, FluxRequestParameters, FluxRestRequestParameters>(endpoint, getParameters);
 
+    /// <summary>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
@@ -42,10 +66,10 @@ public static class WithEndpointExtension
         => builder.WithEndpoint<TModel, TKey, TParameters, FluxRestRequestParameters>(endpoint, getParameters);
 
     /// <summary>
-    /// Configures the default endpoint for the <see cref="IFluxRestSetBuilder{TModel, TKey}"/>
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </summary>
     /// <returns>
-    /// The <see cref="IFluxRestSetBuilder{TModel, TKey}"/> with the endpoint configured
+    /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
