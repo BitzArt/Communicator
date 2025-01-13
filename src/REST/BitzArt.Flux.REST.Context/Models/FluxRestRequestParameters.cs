@@ -15,44 +15,21 @@ public class FluxRestRequestParameters : FluxRequestParameters<KeyValuePair<stri
 
     public FluxRestRequestParameters()
     {
-        
     }
 
-    public void Add(string key, object value)
-        => Add(new KeyValuePair<string, object>(key, value));
+    public void Add(string key, object value) => Add(new KeyValuePair<string, object>(key, value));
 
-    public void Add(KeyValuePair<string, object> item)
-    {
-        Parameters.Add(item);
-    }
+    public void Add(KeyValuePair<string, object> item) => Parameters.Add(item);
 
-    public void Clear()
-    {
-        Parameters.Clear();
-    }
+    public void Clear() => Parameters.Clear();
 
-    public bool Contains(KeyValuePair<string, object> item)
-    {
-        return Parameters.Contains(item);
-    }
+    public bool Contains(KeyValuePair<string, object> item) => Parameters.Contains(item);
 
-    public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
-    {
-        Parameters.CopyTo(array, arrayIndex);
-    }
+    public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => Parameters.CopyTo(array, arrayIndex);
 
-    public bool Remove(KeyValuePair<string, object> item)
-    {
-        return Parameters.Remove(item);
-    }
+    public bool Remove(KeyValuePair<string, object> item) => Parameters.Remove(item);
 
-    public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-    {
-        return Parameters.GetEnumerator();
-    }
+    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => Parameters.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return ((IEnumerable)Parameters).GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Parameters).GetEnumerator();
 }
