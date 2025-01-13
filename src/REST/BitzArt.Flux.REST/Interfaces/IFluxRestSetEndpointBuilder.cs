@@ -33,4 +33,22 @@ public interface IFluxRestSetEndpointBuilder<TModel, TKey> : IFluxRestSetBuilder
         where TInputParameters : IFluxRequestParameters
         where TOutputParameters : IFluxRestRequestParameters
         => this.WithEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(endpoint, getParameters);
+
+    public IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TParameters>(
+        string endpoint)
+        where TParameters : IFluxRequestParameters
+        => this.WithPageEndpoint<TModel, TKey, TParameters>(endpoint);
+
+    public IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TParameters>(
+        string endpoint,
+        Func<TParameters, FluxRestRequestParameters> getParameters)
+        where TParameters : IFluxRequestParameters
+        => this.WithPageEndpoint<TModel, TKey, TParameters, FluxRestRequestParameters>(endpoint, getParameters);
+
+    public IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TInputParameters, TOutputParameters>(
+        string endpoint,
+        Func<TInputParameters, TOutputParameters> getParameters)
+        where TInputParameters : IFluxRequestParameters
+        where TOutputParameters : IFluxRestRequestParameters
+        => this.WithPageEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(endpoint, getParameters);
 }
