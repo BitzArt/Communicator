@@ -5,7 +5,7 @@ namespace BitzArt.Flux;
 /// <summary>
 /// Flux REST set endpoint builder.
 /// </summary>
-/// /// <typeparam name="TModel">
+/// <typeparam name="TModel">
 /// The model type of the set.
 /// </typeparam>
 /// <typeparam name="TKey">
@@ -37,7 +37,7 @@ public interface IFluxRestSetEndpointBuilder<TModel, TKey> : IFluxRestSetBuilder
         string endpoint,
         Func<TParameters, FluxRestRequestParameters> getParameters)
         where TParameters : IFluxRequestParameters
-        => this.WithEndpoint<TModel, TKey, TParameters, FluxRestRequestParameters>(endpoint, getParameters);
+        => this.WithEndpoint<TModel, TKey, TParameters>(endpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithEndpointExtension.WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -73,7 +73,7 @@ public interface IFluxRestSetEndpointBuilder<TModel, TKey> : IFluxRestSetBuilder
         string endpoint,
         Func<TParameters, FluxRestRequestParameters> getParameters)
         where TParameters : IFluxRequestParameters
-        => this.WithPageEndpoint<TModel, TKey, TParameters, FluxRestRequestParameters>(endpoint, getParameters);
+        => this.WithPageEndpoint<TModel, TKey, TParameters>(endpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpointExtension.WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
