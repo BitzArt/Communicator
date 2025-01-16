@@ -18,7 +18,7 @@ public static class WithEndpointExtension
         string endpoint)
         where TModel : class
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey>(endpoint, null);
+        var options = new FluxRestSetEndpointOptions<TModel, TKey>(endpoint);
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, options);
     }
 
@@ -33,7 +33,7 @@ public static class WithEndpointExtension
         string endpoint)
         where TModel : class
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint, null, null);
+        var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint, null);
         return new FluxRestSetEndpointBuilder<TModel, TKey, TParameters>(builder, options);
     }
 
@@ -90,7 +90,7 @@ public static class WithEndpointExtension
         where TModel : class
         where TOutputParameters : IRestRequestParameters
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(endpoint, null, (parameters) => transformParameters(parameters));
+        var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));
         return new FluxRestSetEndpointBuilder<TModel, TKey, TInputParameters>(builder, options);
     }
 }
