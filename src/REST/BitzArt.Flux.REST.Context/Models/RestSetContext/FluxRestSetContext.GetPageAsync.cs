@@ -27,7 +27,8 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
     private RequestUrlParameterParsingResult GetPageEndpointFullPath(PageRequest pageRequest, IFluxRequestParameters? parameters)
     {
         var path = GetPageEndpoint();
-        var parsed = GetFullPath(path, true, parameters);
+        var restParameters = GetRestParameters(SetOptions.PageEndpointOptions, parameters);
+        var parsed = GetFullPath(path, restParameters);
         path = parsed.Result;
 
         var queryIndex = path.IndexOf('?');

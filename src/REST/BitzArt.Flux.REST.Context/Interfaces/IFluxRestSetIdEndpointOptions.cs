@@ -3,5 +3,5 @@
 internal interface IFluxRestSetIdEndpointOptions<TModel> : IFluxRestSetEndpointOptions<TModel>
     where TModel : class
 {
-    public Func<object?, IFluxRequestParameters, string>? GetPathFunc { get; set; }
+    public Func<object?, IFluxRequestParameters?, string>? GetPathFunc { get; set; }
 }

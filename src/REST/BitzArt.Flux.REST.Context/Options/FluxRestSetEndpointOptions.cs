@@ -18,9 +18,9 @@ internal class FluxRestSetEndpointOptions<TModel, TKey> : IFluxRestSetEndpointOp
     {
         get => GetRequestParametersFunc is null ? null : parameters =>
         {
-            var requestParametersType = parameters.GetType();
-            if (ParametersType != requestParametersType)
-                throw new InvalidOperationException($"Request parameters type mismatch. Expected '{ParametersType}', but got '{requestParametersType}'.");
+            var parametersType = parameters.GetType();
+            if (ParametersType != parametersType)
+                throw new InvalidOperationException($"Request parameters type mismatch. Expected '{ParametersType}', but got '{parametersType}'.");
 
             return GetRequestParametersFunc.Invoke(parameters);
         };

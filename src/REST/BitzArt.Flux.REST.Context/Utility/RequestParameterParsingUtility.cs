@@ -6,33 +6,31 @@ namespace BitzArt.Flux;
 
 internal partial class RequestParameterParsingUtility
 {
-    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, object?[]? parameters)
+    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IFluxRestRequestParameters parameters)
     {
         var logBuilder = new StringBuilder();
 
         var matches = ParameterRegex().Matches(path);
         if (matches.Count == 0) return new RequestUrlParameterParsingResult(path, string.Empty);
 
-        if (parameters is null) throw new ParametersNotFoundException();
-
         var requiredCount = matches.Count;
+        var foundCount = parameters.Parameters.Count;
 
-        var foundCount = parameters.Length;
-
-        if (requiredCount != foundCount) throw new ParameterCountDidNotMatchException(foundCount, requiredCount);
+        if (requiredCount != foundCount) 
+            throw new ParameterCountDidNotMatchException(foundCount, requiredCount);
 
         var result = path;
         logBuilder.Append('\n');
 
-        for (int counter = 0; counter < requiredCount; counter++)
+        foreach (Match match in matches)
         {
-            var match = matches[counter];
-            var paramName = match.Groups[1].Value;
-            var value = parameters[counter]!.ToString();
-            result = result.Replace(match.Value, value);
+            var parameterName = match.Groups[1].Value;
+            var parameter = parameters.TryGet(parameterName);
 
-            if (counter > 0) logBuilder.Append("; ");
-            logBuilder.Append($"{paramName}: {value}");
+            var value = parameter.Value;
+            result = result.Replace(match.Value, value.ToString());
+
+            logBuilder.Append($"{parameterName}: {value}\n");
         }
 
         return new RequestUrlParameterParsingResult(result, logBuilder.ToString());

@@ -22,24 +22,28 @@ internal partial class FluxRestSetContext<TModel, TKey>(
     private RequestUrlParameterParsingResult GetEndpointFullPath(IFluxRequestParameters? parameters)
     {
         var endpoint = GetEndpoint();
-        return GetFullPath(endpoint, true, parameters);
+        var restParameters = GetRestParameters(SetOptions.EndpointOptions, parameters);
+
+        return GetFullPath(endpoint, restParameters);
     }
 
     private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, IFluxRequestParameters? parameters)
     {
+        var restParameters = GetRestParameters(SetOptions.IdEndpointOptions, parameters);
+
         if (SetOptions.IdEndpointOptions.GetPathFunc is not null)
         {
             if (id is null)
             {
                 var pathFunc = SetOptions.IdEndpointOptions.GetPathFunc!;
-                return GetFullPath(pathFunc(id, parameters?.Parameters), false, parameters);
+                return GetFullPath(pathFunc(id, parameters), restParameters);
             }
 
             if (id is not TKey idCasted) 
                 throw new ArgumentException($"Id must be of type '{typeof(TKey).Name}'.");
 
-            var idEndpoint = SetOptions.IdEndpointOptions.GetPathFunc(idCasted, parameters?.Parameters);
-            return GetFullPath(idEndpoint, false, parameters);
+            var idEndpoint = SetOptions.IdEndpointOptions.GetPathFunc(idCasted, parameters);
+            return GetFullPath(idEndpoint, restParameters);
         }
         else
         {
@@ -47,7 +51,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
                 ? Path.Combine(SetOptions.EndpointOptions.Path, id!.ToString()!) 
                 : id!.ToString()!;
             
-            return GetFullPath(idEndpoint, true, parameters);
+            return GetFullPath(idEndpoint, restParameters);
         }
     }
 
@@ -57,7 +61,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         return SetOptions.EndpointOptions.Path;
     }
 
-    private RequestUrlParameterParsingResult GetFullPath(string path, bool handleParameters, IFluxRequestParameters? parameters)
+    private RequestUrlParameterParsingResult GetFullPath(string path, IFluxRestRequestParameters? parameters = null)
     {
         // TODO: Review this condition
         if (ServiceOptions.BaseUrl is null) 
@@ -67,10 +71,21 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         var localPath = path.TrimStart('/');
         var resultPath = $"{baseUrl}/{localPath}";
 
-        if (handleParameters) 
-            return RequestParameterParsingUtility.ParseRequestUrl(resultPath, parameters?.Parameters);
+        if (parameters is not null) 
+            return RequestParameterParsingUtility.ParseRequestUrl(resultPath, parameters);
 
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
+    }
+
+    private static IFluxRestRequestParameters? GetRestParameters(IFluxRestSetEndpointOptions<TModel> setOptions, IFluxRequestParameters? parameters)
+    {
+        if (setOptions.GetRequestParametersFunc is null) 
+            return null;
+
+        if (parameters is null)
+            throw new ArgumentNullException(nameof(parameters), "Request parameters must be provided.");
+
+        return setOptions.GetRequestParametersFunc(parameters);
     }
 
     private async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message, CancellationToken cancellationToken = default)
@@ -78,7 +93,10 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         try
         {
             var response = await HttpClient.SendAsync(message, cancellationToken);
-            if (!response.IsSuccessStatusCode) throw new FluxRestNonSuccessStatusCodeException(response);
+            
+            if (!response.IsSuccessStatusCode) 
+                throw new FluxRestNonSuccessStatusCodeException(response);
+
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             var result = JsonSerializer.Deserialize<TResult>(content, ServiceOptions.SerializerOptions)!;
 
