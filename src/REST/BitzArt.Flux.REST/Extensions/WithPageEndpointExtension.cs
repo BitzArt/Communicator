@@ -17,7 +17,7 @@ public static class WithPageEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-        => builder.WithPageEndpoint<TModel, TKey, FluxRequestParameters>(endpoint);
+        => builder.WithPageEndpoint<TModel, TKey, RequestParameters>(endpoint);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -29,7 +29,7 @@ public static class WithPageEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-        where TParameters : IFluxRequestParameters
+        where TParameters : IRequestParameters
     {
         builder.SetOptions.PageEndpointOptions.ParametersType = typeof(TParameters);
         builder.SetOptions.PageEndpointOptions.Path = endpoint;
@@ -47,9 +47,9 @@ public static class WithPageEndpointExtension
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<FluxRequestParameters, FluxRestRequestParameters> getParameters)
+        Func<RequestParameters, RestRequestParameters> getParameters)
         where TModel : class
-        => builder.WithPageEndpoint<TModel, TKey, FluxRequestParameters, FluxRestRequestParameters>(endpoint, getParameters);
+        => builder.WithPageEndpoint<TModel, TKey, RequestParameters, RestRequestParameters>(endpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -60,10 +60,10 @@ public static class WithPageEndpointExtension
     public static IFluxRestSetEndpointBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<TParameters, FluxRestRequestParameters> getParameters)
+        Func<TParameters, RestRequestParameters> getParameters)
         where TModel : class
-        where TParameters : IFluxRequestParameters
-        => builder.WithPageEndpoint<TModel, TKey, TParameters, FluxRestRequestParameters>(endpoint, getParameters);
+        where TParameters : IRequestParameters
+        => builder.WithPageEndpoint<TModel, TKey, TParameters, RestRequestParameters>(endpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -76,8 +76,8 @@ public static class WithPageEndpointExtension
         string endpoint,
         Func<TInputParameters, TOutputParameters> getParameters)
         where TModel : class
-        where TInputParameters : IFluxRequestParameters
-        where TOutputParameters : IFluxRestRequestParameters
+        where TInputParameters : IRequestParameters
+        where TOutputParameters : IRestRequestParameters
     {
         builder.SetOptions.PageEndpointOptions.ParametersType = typeof(TInputParameters);
         builder.SetOptions.PageEndpointOptions.Path = endpoint;

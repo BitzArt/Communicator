@@ -16,5 +16,5 @@ internal interface IFluxRestSetEndpointOptions<TModel>
 
     public Type? ParametersType { get; internal set; }
 
-    public Func<IFluxRequestParameters, IFluxRestRequestParameters>? GetRequestParametersFunc { get; internal set; }
+    public Func<IRequestParameters, IRestRequestParameters>? GetRequestParametersFunc { get; internal set; }
 }

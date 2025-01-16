@@ -11,10 +11,10 @@ internal class FluxRestSetEndpointOptions<TModel, TKey> : IFluxRestSetEndpointOp
 
     public Type? ParametersType { get; set; }
 
-    internal Func<IFluxRequestParameters, IFluxRestRequestParameters>? GetRequestParametersFunc { get; set; }
+    internal Func<IRequestParameters, IRestRequestParameters>? GetRequestParametersFunc { get; set; }
 
     // TODO: Review the implementation
-    Func<IFluxRequestParameters, IFluxRestRequestParameters>? IFluxRestSetEndpointOptions<TModel>.GetRequestParametersFunc
+    Func<IRequestParameters, IRestRequestParameters>? IFluxRestSetEndpointOptions<TModel>.GetRequestParametersFunc
     {
         get => GetRequestParametersFunc is null ? null : parameters =>
         {

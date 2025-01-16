@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public interface IFluxRestRequestParameters
+public interface IRestRequestParameters
 {
     public Dictionary<string, object> Parameters { get; }
 

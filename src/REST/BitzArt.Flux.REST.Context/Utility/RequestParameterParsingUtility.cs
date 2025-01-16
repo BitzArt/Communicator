@@ -6,7 +6,7 @@ namespace BitzArt.Flux;
 
 internal partial class RequestParameterParsingUtility
 {
-    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IFluxRestRequestParameters parameters)
+    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IRestRequestParameters parameters)
     {
         var logBuilder = new StringBuilder();
 

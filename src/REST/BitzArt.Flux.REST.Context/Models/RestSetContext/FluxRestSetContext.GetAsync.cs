@@ -8,10 +8,10 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
     public override Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default)
         => GetAsyncInternal(id, null, cancellationToken);
 
-    public override Task<TModel> GetAsync(TKey? id, IFluxRequestParameters parameters, CancellationToken cancellationToken = default)
+    public override Task<TModel> GetAsync(TKey? id, IRequestParameters parameters, CancellationToken cancellationToken = default)
         => GetAsyncInternal(id, parameters, cancellationToken);
 
-    private async Task<TModel> GetAsyncInternal(TKey? id, IFluxRequestParameters? parameters, CancellationToken cancellationToken)
+    private async Task<TModel> GetAsyncInternal(TKey? id, IRequestParameters? parameters, CancellationToken cancellationToken)
     {
         var parsed = GetIdEndpointFullPath(id, parameters);
         _logger.LogInformation("Get {type}[{id}]: {route}{parsingLog}", typeof(TModel).Name, id!.ToString(), parsed.Result, parsed.Log);

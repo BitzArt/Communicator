@@ -19,7 +19,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
 
     private readonly ILogger _logger = logger;
 
-    private RequestUrlParameterParsingResult GetEndpointFullPath(IFluxRequestParameters? parameters)
+    private RequestUrlParameterParsingResult GetEndpointFullPath(IRequestParameters? parameters)
     {
         var endpoint = GetEndpoint();
         var restParameters = GetRestParameters(SetOptions.EndpointOptions, parameters);
@@ -27,7 +27,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         return GetFullPath(endpoint, restParameters);
     }
 
-    private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, IFluxRequestParameters? parameters)
+    private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, IRequestParameters? parameters)
     {
         var restParameters = GetRestParameters(SetOptions.IdEndpointOptions, parameters);
 
@@ -61,7 +61,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         return SetOptions.EndpointOptions.Path;
     }
 
-    private RequestUrlParameterParsingResult GetFullPath(string path, IFluxRestRequestParameters? parameters = null)
+    private RequestUrlParameterParsingResult GetFullPath(string path, IRestRequestParameters? parameters = null)
     {
         // TODO: Review this condition
         if (ServiceOptions.BaseUrl is null) 
@@ -77,7 +77,7 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
     }
 
-    private static IFluxRestRequestParameters? GetRestParameters(IFluxRestSetEndpointOptions<TModel> setOptions, IFluxRequestParameters? parameters)
+    private static IRestRequestParameters? GetRestParameters(IFluxRestSetEndpointOptions<TModel> setOptions, IRequestParameters? parameters)
     {
         if (setOptions.GetRequestParametersFunc is null) 
             return null;

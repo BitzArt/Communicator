@@ -2,7 +2,7 @@
 
 namespace BitzArt.Flux;
 
-public class FluxRestRequestParameters : IFluxRestRequestParameters, ICollection<KeyValuePair<string, object>>
+public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValuePair<string, object>>
 {
     public int Count => Parameters.Count;
 
@@ -10,12 +10,12 @@ public class FluxRestRequestParameters : IFluxRestRequestParameters, ICollection
 
     public Dictionary<string, object> Parameters { get; } = [];
 
-    public FluxRestRequestParameters(params KeyValuePair<string, object>[] parameters) : this()
+    public RestRequestParameters(params KeyValuePair<string, object>[] parameters) : this()
     {
         Parameters = parameters.ToDictionary(x => x.Key, x => x.Value);
     }
 
-    public FluxRestRequestParameters()
+    public RestRequestParameters()
     {
     }
 

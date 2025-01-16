@@ -10,10 +10,10 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
     public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default)
         => await GetPageAsyncInternal(pageRequest, null, cancellationToken);
 
-    public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IFluxRequestParameters parameters, CancellationToken cancellationToken = default)
+    public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IRequestParameters parameters, CancellationToken cancellationToken = default)
         => await GetPageAsyncInternal(pageRequest, parameters, cancellationToken);
 
-    private async Task<PageResult<TModel>> GetPageAsyncInternal(PageRequest pageRequest, IFluxRequestParameters? parameters, CancellationToken cancellationToken)
+    private async Task<PageResult<TModel>> GetPageAsyncInternal(PageRequest pageRequest, IRequestParameters? parameters, CancellationToken cancellationToken)
     {
         var parsed = GetPageEndpointFullPath(pageRequest, parameters);
         _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parsed.Result, parsed.Log);
@@ -24,7 +24,7 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
         return result;
     }
 
-    private RequestUrlParameterParsingResult GetPageEndpointFullPath(PageRequest pageRequest, IFluxRequestParameters? parameters)
+    private RequestUrlParameterParsingResult GetPageEndpointFullPath(PageRequest pageRequest, IRequestParameters? parameters)
     {
         var path = GetPageEndpoint();
         var restParameters = GetRestParameters(SetOptions.PageEndpointOptions, parameters);

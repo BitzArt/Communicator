@@ -14,7 +14,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public abstract Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public abstract Task<IEnumerable<TModel>> GetAllAsync(IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    public abstract Task<IEnumerable<TModel>> GetAllAsync(IRequestParameters parameters, CancellationToken cancellationToken = default);
 
     // ============== GET PAGE =============
 
@@ -26,11 +26,11 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, IFluxRequestParameters parameters, CancellationToken cancellationToken = default)
+    public virtual Task<PageResult<TModel>> GetPageAsync(int offset, int limit, IRequestParameters parameters, CancellationToken cancellationToken = default)
         => GetPageAsync(new PageRequest(offset, limit), parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    public abstract Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IRequestParameters parameters, CancellationToken cancellationToken = default);
 
     // ============== GET (Single) =========
 
@@ -46,7 +46,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public abstract Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public virtual Task<TModel> GetAsync(object? id, IFluxRequestParameters parameters, CancellationToken cancellationToken = default)
+    public virtual Task<TModel> GetAsync(object? id, IRequestParameters parameters, CancellationToken cancellationToken = default)
     {
         if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type.");
 
@@ -54,7 +54,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     }
 
     /// <inheritdoc/>
-    public abstract Task<TModel> GetAsync(TKey? id, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    public abstract Task<TModel> GetAsync(TKey? id, IRequestParameters parameters, CancellationToken cancellationToken = default);
 
     // ============== ADD ==================
 
@@ -66,11 +66,11 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public abstract Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public virtual Task<TModel> AddAsync(TModel model, IFluxRequestParameters parameters, CancellationToken cancellationToken = default)
+    public virtual Task<TModel> AddAsync(TModel model, IRequestParameters parameters, CancellationToken cancellationToken = default)
         => AddAsync<TModel>(model, parameters, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, IFluxRequestParameters parameters, CancellationToken cancellationToken = default);
+    public abstract Task<TResponse> AddAsync<TResponse>(TModel model, IRequestParameters parameters, CancellationToken cancellationToken = default);
 
     // ============== UPDATE BY ID =========
 
@@ -89,18 +89,18 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(object? id, TModel model, IFluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(object? id, TModel model, IRequestParameters parameters, bool partial, CancellationToken cancellationToken)
         => UpdateAsync<TModel>(Cast<TKey>(id), model, parameters, partial, cancellationToken);
 
-    Task<TResponse> IFluxSetContext<TModel>.UpdateAsync<TResponse>(object? id, TModel model, IFluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+    Task<TResponse> IFluxSetContext<TModel>.UpdateAsync<TResponse>(object? id, TModel model, IRequestParameters parameters, bool partial, CancellationToken cancellationToken)
         => UpdateAsync<TResponse>(Cast<TKey>(id), model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
-    Task<TModel> IFluxSetContext<TModel, TKey>.UpdateAsync(TKey? id, TModel model, IFluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+    Task<TModel> IFluxSetContext<TModel, TKey>.UpdateAsync(TKey? id, TModel model, IRequestParameters parameters, bool partial, CancellationToken cancellationToken)
         => UpdateAsync<TModel>(id, model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, IFluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 
     // ============== UPDATE ===============
 
@@ -110,11 +110,11 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     /// <inheritdoc/>
     public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
-    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(TModel model, IFluxRequestParameters parameters, bool partial, CancellationToken cancellationToken)
+    Task<TModel> IFluxSetContext<TModel>.UpdateAsync(TModel model, IRequestParameters parameters, bool partial, CancellationToken cancellationToken)
         => UpdateAsync<TModel>(model, parameters, partial, cancellationToken);
 
     /// <inheritdoc/>
-    public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, IFluxRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    public abstract Task<TResponse> UpdateAsync<TResponse>(TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
 
     private static TResult Cast<TResult>(object? value)
     {
