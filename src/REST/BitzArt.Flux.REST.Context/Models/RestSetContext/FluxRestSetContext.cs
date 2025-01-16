@@ -22,14 +22,17 @@ internal partial class FluxRestSetContext<TModel, TKey>(
     private RequestUrlParameterParsingResult GetEndpointFullPath(IRequestParameters? parameters)
     {
         var endpoint = GetEndpoint();
-        var restParameters = GetRestParameters(SetOptions.EndpointOptions, parameters);
+
+
+
+        var restParameters = TransformParameters(SetOptions.EndpointOptions, parameters);
 
         return GetFullPath(endpoint, restParameters);
     }
 
     private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, IRequestParameters? parameters)
     {
-        var restParameters = GetRestParameters(SetOptions.IdEndpointOptions, parameters);
+        var restParameters = TransformParameters(SetOptions.IdEndpointOptions, parameters);
 
         if (SetOptions.IdEndpointOptions.GetPathFunc is not null)
         {
@@ -75,17 +78,6 @@ internal partial class FluxRestSetContext<TModel, TKey>(
             return RequestParameterParsingUtility.ParseRequestUrl(resultPath, parameters);
 
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
-    }
-
-    private static IRestRequestParameters? GetRestParameters(IFluxRestSetEndpointOptions<TModel> setOptions, IRequestParameters? parameters)
-    {
-        if (setOptions.GetRestRequestParametersFunc is null) 
-            return null;
-
-        if (parameters is null)
-            throw new ArgumentNullException(nameof(parameters), "Request parameters must be provided."); // TODO: wording
-
-        return setOptions.GetRestRequestParametersFunc(parameters);
     }
 
     private async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message, CancellationToken cancellationToken = default)

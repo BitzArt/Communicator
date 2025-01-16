@@ -25,12 +25,15 @@ internal partial class RequestParameterParsingUtility
         foreach (Match match in matches)
         {
             var parameterName = match.Groups[1].Value;
-            var found = parameters.Parameters.TryGetValue(parameterName, out var value);
-            if (!found) throw new ParameterNotFoundException(parameterName);
+            var parameter = parameters.Parameters.FirstOrDefault(p => p.Key == parameterName);
 
-            result = result.Replace(match.Value, value!.ToString());
+            // TODO: Review this condition
+            if (parameter.Equals(default(KeyValuePair<string, object>)))
+                throw new ParameterNotFoundException(parameterName);
 
-            logBuilder.Append($"{parameterName}: {value}\n");
+            result = result.Replace(match.Value, parameter.Value!.ToString());
+
+            logBuilder.Append($"{parameterName}: {parameter.Value}\n");
         }
 
         return new RequestUrlParameterParsingResult(result, logBuilder.ToString());

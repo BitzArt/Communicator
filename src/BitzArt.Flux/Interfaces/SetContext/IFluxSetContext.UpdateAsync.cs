@@ -12,10 +12,10 @@ public partial interface IFluxSetContext<TModel>
     public Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
-    public Task<TModel> UpdateAsync(object? id, TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    public Task<TModel> UpdateAsync<TParameter>(object? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="UpdateAsync(object?, TModel, IRequestParameters, bool, CancellationToken)"/>
-    public Task<TResponse> UpdateAsync<TResponse>(object? id, TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TParameter, TResponse>(object? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync(TModel model, bool partial = false, CancellationToken cancellationToken = default);
@@ -24,10 +24,10 @@ public partial interface IFluxSetContext<TModel>
     public Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
-    public Task<TModel> UpdateAsync(TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    public Task<TModel> UpdateAsync<TParameter>(TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="UpdateAsync(object?, TModel, IRequestParameters, bool, CancellationToken)"/>
-    public Task<TResponse> UpdateAsync<TResponse>(TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TParameter, TResponse>(TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default);
 }
 
 public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
@@ -39,9 +39,9 @@ public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, IRequestParameters, bool, CancellationToken)"/>
-    public Task<TModel> UpdateAsync(TKey? id, TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TModel> UpdateAsync<TParameter>(TKey? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default);
 
-    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, IRequestParameters, bool, CancellationToken)"/>
-    public Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default);
+    /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
+    public Task<TResponse> UpdateAsync<TParameter, TResponse>(TKey? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default);
 }

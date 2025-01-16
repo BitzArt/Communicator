@@ -4,34 +4,57 @@ namespace BitzArt.Flux;
 
 public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValuePair<string, object>>
 {
-    public Dictionary<string, object> Parameters { get; } = [];
+    public Dictionary<string, object> Parameters => GetDictionary.Invoke();
 
-    public int Count => Parameters.Count;
+    private readonly Dictionary<string, object> _parameters = []; 
 
-    public bool IsReadOnly => false;
+    ICollection<KeyValuePair<string, object>> IRequestParameters<KeyValuePair<string, object>>.Parameters => Parameters; 
+
+    private ICollection<KeyValuePair<string, object>> _parameterCollection => Parameters;
+
+    /// <inheritdoc/>
+    public int Count => _parameterCollection.Count;
+
+    /// <inheritdoc/>
+    public bool IsReadOnly => _parameterCollection.IsReadOnly;
 
     public RestRequestParameters(params KeyValuePair<string, object>[] parameters) : this()
     {
-        Parameters = parameters.ToDictionary(x => x.Key, x => x.Value);
+        _parameters = new(parameters);
     }
 
     public RestRequestParameters()
     {
     }
 
-    public void Add(string key, object value) => Add(new KeyValuePair<string, object>(key, value));
+    protected virtual Func<Dictionary<string, object>> GetDictionary => () => 
+    { 
+        if (GetParameters is null) return _parameters;
 
-    public void Add(KeyValuePair<string, object> item) => Parameters.Add(item.Key, item.Value);
+        var collection = GetParameters.Invoke();
+        return new(collection);
+    };
 
-    public void Clear() => Parameters.Clear();
+    protected virtual Func<ICollection<KeyValuePair<string, object>>>? GetParameters => null;
 
-    public bool Contains(KeyValuePair<string, object> item) => Parameters.Contains(item);
+    /// <inheritdoc/>
+    public void Add(KeyValuePair<string, object> item) => _parameterCollection.Add(item);
 
-    public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => Parameters.ToArray().CopyTo(array, arrayIndex);
+    /// <inheritdoc/>
+    public void Clear() => _parameterCollection.Clear();
 
-    public bool Remove(KeyValuePair<string, object> item) => Parameters.Remove(item.Key);
+    /// <inheritdoc/>
+    public bool Contains(KeyValuePair<string, object> item) => _parameterCollection.Contains(item);
 
-    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => Parameters.GetEnumerator();
+    /// <inheritdoc/>
+    public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex) => _parameterCollection.CopyTo(array, arrayIndex);
 
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Parameters).GetEnumerator();
+    /// <inheritdoc/>
+    public bool Remove(KeyValuePair<string, object> item) => _parameterCollection.Remove(item);
+
+    /// <inheritdoc/>
+    public IEnumerator<KeyValuePair<string, object>> GetEnumerator() => _parameterCollection.GetEnumerator();
+
+    /// <inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_parameterCollection).GetEnumerator();
 }

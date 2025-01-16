@@ -7,19 +7,18 @@ namespace BitzArt.Flux.REST;
 internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
     where TModel : class
 {
-    public override async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default)
-        => await UpdateAsyncInternal<TResponse>(id, model, null, partial, cancellationToken);
-
-    public override async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        => await UpdateAsyncInternal<TResponse>(id, model, parameters, partial, cancellationToken);
-
     public override Task<TResponse> UpdateAsync<TResponse>(TModel model, bool partial = false, CancellationToken cancellationToken = default)
         => UpdateAsync<TResponse>(id: default, model, partial, cancellationToken);
 
-    public override Task<TResponse> UpdateAsync<TResponse>(TModel model, IRequestParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        => UpdateAsync<TResponse>(id: default, model, parameters, partial, cancellationToken);
+    public override async Task<TResponse> UpdateAsync<TResponse>(TKey? id, TModel model, bool partial = false, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 
-    private async Task<TResponse> UpdateAsyncInternal<TResponse>(TKey? id, TModel model, IRequestParameters? parameters, bool partial, CancellationToken cancellationToken)
+    public override Task<TResponse> UpdateAsync<TParameter, TResponse>(TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default)
+        => UpdateAsync<TParameter, TResponse>(id: default, model, parameters, partial, cancellationToken);
+
+    public override async Task<TResponse> UpdateAsync<TParameter, TResponse>(TKey? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default)
     {
         var parsed = GetIdEndpointFullPath(id, parameters);
         _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parsed.Result);

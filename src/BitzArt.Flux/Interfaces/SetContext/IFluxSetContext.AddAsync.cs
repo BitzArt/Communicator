@@ -12,8 +12,8 @@ public partial interface IFluxSetContext<TModel>
     public Task<TResponse> AddAsync<TResponse>(TModel model, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="AddAsync(TModel, CancellationToken)"/>/>
-    public Task<TModel> AddAsync(TModel model, IRequestParameters parameters, CancellationToken cancellationToken = default);
+    public Task<TModel> AddAsync<TParameter>(TModel model, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="AddAsync(TModel, CancellationToken)"/>
-    public Task<TResponse> AddAsync<TResponse>(TModel model, IRequestParameters parameters, CancellationToken cancellationToken = default);
+    public Task<TResponse> AddAsync<TParameter, TResponse>(TModel model, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default);
 }

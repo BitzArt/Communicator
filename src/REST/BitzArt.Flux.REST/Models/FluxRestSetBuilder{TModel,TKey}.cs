@@ -8,7 +8,6 @@ internal class FluxRestSetBuilder<TModel>(
     ) : FluxRestSetBuilder<TModel, object>(serviceBuilder)
     where TModel : class
 {
-
 }
 
 internal class FluxRestSetBuilder<TModel, TKey>(

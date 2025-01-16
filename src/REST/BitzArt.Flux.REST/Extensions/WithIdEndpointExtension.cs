@@ -33,7 +33,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => endpoint;
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = null;
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = null;
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -64,7 +64,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key);
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = null;
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = null;
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -95,7 +95,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, (TParameters)parameters!);
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = null;
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = null;
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -157,7 +157,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TInputParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => endpoint;
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -219,7 +219,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TInputParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint();
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -281,7 +281,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TInputParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key);
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }
@@ -343,7 +343,7 @@ public static class WithIdEndpointExtension
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TInputParameters);
         builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, (TInputParameters)parameters!);
-        builder.SetOptions.IdEndpointOptions.GetRestRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
+        builder.SetOptions.IdEndpointOptions.TransformRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
     }

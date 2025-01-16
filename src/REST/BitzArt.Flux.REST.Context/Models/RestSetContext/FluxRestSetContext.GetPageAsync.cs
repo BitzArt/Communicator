@@ -8,12 +8,11 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
     where TModel : class
 {
     public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default)
-        => await GetPageAsyncInternal(pageRequest, null, cancellationToken);
+    {
+        throw new NotImplementedException();
+    }
 
-    public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, IRequestParameters parameters, CancellationToken cancellationToken = default)
-        => await GetPageAsyncInternal(pageRequest, parameters, cancellationToken);
-
-    private async Task<PageResult<TModel>> GetPageAsyncInternal(PageRequest pageRequest, IRequestParameters? parameters, CancellationToken cancellationToken)
+    public override async Task<PageResult<TModel>> GetPageAsync<TParameter>(PageRequest pageRequest, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default)
     {
         var parsed = GetPageEndpointFullPath(pageRequest, parameters);
         _logger.LogInformation("GetPage {type}: {route}{parsingLog}", typeof(TModel).Name, parsed.Result, parsed.Log);
@@ -27,7 +26,7 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
     private RequestUrlParameterParsingResult GetPageEndpointFullPath(PageRequest pageRequest, IRequestParameters? parameters)
     {
         var path = GetPageEndpoint();
-        var restParameters = GetRestParameters(SetOptions.PageEndpointOptions, parameters);
+        var restParameters = TransformParameters(SetOptions.PageEndpointOptions, parameters);
         var parsed = GetFullPath(path, restParameters);
         path = parsed.Result;
 
