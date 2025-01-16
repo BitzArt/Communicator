@@ -79,13 +79,13 @@ internal partial class FluxRestSetContext<TModel, TKey>(
 
     private static IRestRequestParameters? GetRestParameters(IFluxRestSetEndpointOptions<TModel> setOptions, IRequestParameters? parameters)
     {
-        if (setOptions.GetRequestParametersFunc is null) 
+        if (setOptions.GetRestRequestParametersFunc is null) 
             return null;
 
         if (parameters is null)
-            throw new ArgumentNullException(nameof(parameters), "Request parameters must be provided.");
+            throw new ArgumentNullException(nameof(parameters), "Request parameters must be provided."); // TODO: wording
 
-        return setOptions.GetRequestParametersFunc(parameters);
+        return setOptions.GetRestRequestParametersFunc(parameters);
     }
 
     private async Task<TResult> HandleRequestAsync<TResult>(HttpRequestMessage message, CancellationToken cancellationToken = default)

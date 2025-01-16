@@ -11,29 +11,28 @@ internal class FluxRestSetEndpointOptions<TModel, TKey> : IFluxRestSetEndpointOp
 
     public Type? ParametersType { get; set; }
 
-    internal Func<IRequestParameters, IRestRequestParameters>? GetRequestParametersFunc { get; set; }
+    internal Func<IRequestParameters, IRestRequestParameters>? GetRestRequestParametersFunc { get; set; }
 
-    // TODO: Review the implementation
-    Func<IRequestParameters, IRestRequestParameters>? IFluxRestSetEndpointOptions<TModel>.GetRequestParametersFunc
+    Func<IRequestParameters, IRestRequestParameters>? IFluxRestSetEndpointOptions<TModel>.GetRestRequestParametersFunc
     {
-        get => GetRequestParametersFunc is null ? null : parameters =>
+        get => GetRestRequestParametersFunc is null ? null : parameters =>
         {
             var parametersType = parameters.GetType();
             if (ParametersType != parametersType)
                 throw new InvalidOperationException($"Request parameters type mismatch. Expected '{ParametersType}', but got '{parametersType}'.");
 
-            return GetRequestParametersFunc.Invoke(parameters);
+            return GetRestRequestParametersFunc.Invoke(parameters);
         };
 
         set
         {
             if (value is null)
             {
-                GetRequestParametersFunc = null;
+                GetRestRequestParametersFunc = null;
                 return;
             }
 
-            GetRequestParametersFunc = value.Invoke;
+            GetRestRequestParametersFunc = value.Invoke;
         }
     }
 }

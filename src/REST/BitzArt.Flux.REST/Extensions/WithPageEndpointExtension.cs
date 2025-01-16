@@ -33,7 +33,7 @@ public static class WithPageEndpointExtension
     {
         builder.SetOptions.PageEndpointOptions.ParametersType = typeof(TParameters);
         builder.SetOptions.PageEndpointOptions.Path = endpoint;
-        builder.SetOptions.PageEndpointOptions.GetRequestParametersFunc = null;
+        builder.SetOptions.PageEndpointOptions.GetRestRequestParametersFunc = null;
 
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.PageEndpointOptions);
     }
@@ -95,7 +95,7 @@ public static class WithPageEndpointExtension
     {
         builder.SetOptions.PageEndpointOptions.ParametersType = typeof(TInputParameters);
         builder.SetOptions.PageEndpointOptions.Path = endpoint;
-        builder.SetOptions.PageEndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
+        builder.SetOptions.PageEndpointOptions.GetRestRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, (FluxRestSetEndpointOptions<TModel, TKey>)builder.SetOptions.PageEndpointOptions);
     }
