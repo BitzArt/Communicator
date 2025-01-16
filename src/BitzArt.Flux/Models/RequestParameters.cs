@@ -1,10 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
-public class RequestParameters : RequestParameters<object?>
+public class RequestParameters(params object?[] parameters) : RequestParameters<object?>(parameters)
 {
-    public RequestParameters(params object?[] parameters) : base(parameters)
-    {
-    }
 }
 
 public class RequestParameters<T> : IRequestParameters<T>

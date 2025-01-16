@@ -94,7 +94,7 @@ public static class WithIdEndpointExtension
         where TParameters : IRequestParameters
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TParameters);
-        builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, (TParameters)parameters);
+        builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, (TParameters)parameters!);
         builder.SetOptions.IdEndpointOptions.GetRequestParametersFunc = null;
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);
@@ -119,13 +119,27 @@ public static class WithIdEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TParameters>(
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<TParameters, RestRequestParameters> getParameters)
+        Func<TInputParameters, RestRequestParameters> getParameters)
         where TModel : class
-        where TParameters : IRequestParameters
-        => builder.WithIdEndpoint<TModel, TKey, TParameters, RestRequestParameters>(endpoint, getParameters);
+        where TInputParameters : IRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, TInputParameters, RestRequestParameters>(endpoint, getParameters);
+
+    /// <summary>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TOutputParameters>(
+        this IFluxRestSetBuilder<TModel, TKey> builder,
+        string endpoint,
+        Func<RequestParameters, TOutputParameters> getParameters)
+        where TModel : class
+        where TOutputParameters : IRestRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, RequestParameters, TOutputParameters>(endpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -167,13 +181,27 @@ public static class WithIdEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TParameters>(
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         Func<string> getEndpoint,
-        Func<TParameters, RestRequestParameters> getParameters)
+        Func<TInputParameters, RestRequestParameters> getParameters)
         where TModel : class
-        where TParameters : IRequestParameters
-        => builder.WithIdEndpoint<TModel, TKey, TParameters, RestRequestParameters>(getEndpoint, getParameters);
+        where TInputParameters : IRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, TInputParameters, RestRequestParameters>(getEndpoint, getParameters);
+
+    /// <summary>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TOutputParameters>(
+        this IFluxRestSetBuilder<TModel, TKey> builder,
+        Func<string> getEndpoint,
+        Func<RequestParameters, TOutputParameters> getParameters)
+        where TModel : class
+        where TOutputParameters : IRestRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, RequestParameters, TOutputParameters>(getEndpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -215,13 +243,27 @@ public static class WithIdEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TParameters>(
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         Func<TKey?, string> getEndpoint,
-        Func<TParameters, RestRequestParameters> getParameters)
+        Func<TInputParameters, RestRequestParameters> getParameters)
         where TModel : class
-        where TParameters : IRequestParameters
-        => builder.WithIdEndpoint<TModel, TKey, TParameters, RestRequestParameters>(getEndpoint, getParameters);
+        where TInputParameters : IRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, TInputParameters, RestRequestParameters>(getEndpoint, getParameters);
+
+    /// <summary>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TOutputParameters>(
+        this IFluxRestSetBuilder<TModel, TKey> builder,
+        Func<TKey?, string> getEndpoint,
+        Func<RequestParameters, TOutputParameters> getParameters)
+        where TModel : class
+        where TOutputParameters : IRestRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, RequestParameters, TOutputParameters>(getEndpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -263,13 +305,27 @@ public static class WithIdEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TParameters>(
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, TParameters, string> getEndpoint,
-        Func<TParameters, RestRequestParameters> getParameters)
+        Func<TKey?, TInputParameters, string> getEndpoint,
+        Func<TInputParameters, RestRequestParameters> getParameters)
         where TModel : class
-        where TParameters : IRequestParameters
-        => builder.WithIdEndpoint<TModel, TKey, TParameters, RestRequestParameters>(getEndpoint, getParameters);
+        where TInputParameters : IRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, TInputParameters, RestRequestParameters>(getEndpoint, getParameters);
+
+    /// <summary>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </summary>
+    /// <returns>
+    /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
+    /// </returns>
+    public static IFluxRestSetIdEndpointBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TOutputParameters>(
+        this IFluxRestSetBuilder<TModel, TKey> builder,
+        Func<TKey?, RequestParameters, string> getEndpoint,
+        Func<RequestParameters, TOutputParameters> getParameters)
+        where TModel : class
+        where TOutputParameters : IRestRequestParameters
+        => builder.WithIdEndpoint<TModel, TKey, RequestParameters, TOutputParameters>(getEndpoint, getParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -286,7 +342,7 @@ public static class WithIdEndpointExtension
         where TOutputParameters : IRestRequestParameters
     {
         builder.SetOptions.IdEndpointOptions.ParametersType = typeof(TInputParameters);
-        builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, (TInputParameters)parameters);
+        builder.SetOptions.IdEndpointOptions.GetPathFunc = (key, parameters) => getEndpoint((TKey?)key, (TInputParameters)parameters!);
         builder.SetOptions.IdEndpointOptions.GetRequestParametersFunc = (parameters) => getParameters((TInputParameters)parameters);
 
         return new FluxRestSetIdEndpointBuilder<TModel, TKey>(builder, (FluxRestSetIdEndpointOptions<TModel, TKey>)builder.SetOptions.EndpointOptions);

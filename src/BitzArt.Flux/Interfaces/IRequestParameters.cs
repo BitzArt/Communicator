@@ -6,5 +6,5 @@ public interface IRequestParameters<T> : IRequestParameters
 }
 
 public interface IRequestParameters
-{ 
+{
 }
