@@ -14,18 +14,7 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
 
     public override async Task<TResponse> AddAsync<TParameter, TResponse>(TModel model, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default)
     {
-        var parsed = GetEndpointFullPath(parameters);
-        _logger.LogInformation("Add {type}: {route}", typeof(TModel).Name, parsed.Result);
-
-        var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
-        var message = new HttpRequestMessage(HttpMethod.Post, parsed.Result)
-        {
-            Content = new StringContent(jsonString, Encoding.UTF8, "application/json")
-        };
-
-        var result = await HandleRequestAsync<TResponse>(message, cancellationToken);
-
-        return result;
+        throw new NotImplementedException();
     }
       
 }

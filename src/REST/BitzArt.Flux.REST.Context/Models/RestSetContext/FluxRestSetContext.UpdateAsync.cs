@@ -20,19 +20,6 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
 
     public override async Task<TResponse> UpdateAsync<TParameter, TResponse>(TKey? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default)
     {
-        var parsed = GetIdEndpointFullPath(id, parameters);
-        _logger.LogInformation("Update {type}[{id}]: {route}", typeof(TModel).Name, id is not null ? id.ToString() : "_", parsed.Result);
-
-        var method = partial ? HttpMethod.Patch : HttpMethod.Put;
-        var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
-
-        var message = new HttpRequestMessage(method, parsed.Result)
-        {
-            Content = new StringContent(jsonString, Encoding.UTF8, "application/json")
-        };
-
-        var result = await HandleRequestAsync<TResponse>(message, cancellationToken);
-
-        return result;
+        throw new NotImplementedException();
     }
 }

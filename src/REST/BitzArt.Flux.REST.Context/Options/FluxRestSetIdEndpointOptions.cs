@@ -7,9 +7,9 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
     public IGetPathByIdFunc GetPathFunc { get; set; } = new GetPathByIdFunc<TModel, TKey>();
 
     public FluxRestSetIdEndpointOptions(
-        string? path = null, 
-        Func<TKey, string>? getPath = null, 
-        Func<TInputParameters, IRestRequestParameters>? transformParameters = null) 
+        string? path = null,
+        Func<TKey, string>? getPath = null,
+        Func<TInputParameters, IRestRequestParameters>? transformParameters = null)
         : base(path, transformParameters)
     {
         if (getPath is not null)
@@ -37,9 +37,9 @@ file class GetPathByIdFunc<TModel, TKey>() : IGetPathByIdFunc
     {
         get => _value is null ? null : (key) =>
         {
-            if (key is not TKey keyTyped) 
+            if (key is not TKey keyTyped)
                 throw new InvalidOperationException($"Key type mismatch. Expected {typeof(TKey)}, but got {key?.GetType()}.");
-            
+
             return _value.Invoke(keyTyped);
         };
 

@@ -19,42 +19,31 @@ internal partial class FluxRestSetContext<TModel, TKey>(
 
     private readonly ILogger _logger = logger;
 
-    private RequestUrlParameterParsingResult GetEndpointFullPath(IRequestParameters? parameters)
+    private RequestUrlParameterParsingResult GetEndpointFullPath(params object[]? parameters)
     {
         var endpoint = GetEndpoint();
-
-
-
-        var restParameters = TransformParameters(SetOptions.EndpointOptions, parameters);
-
-        return GetFullPath(endpoint, restParameters);
+        return GetFullPath(endpoint, true, parameters);
     }
 
-    private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, IRequestParameters? parameters)
+    private RequestUrlParameterParsingResult GetIdEndpointFullPath(TKey? id, params object[]? parameters)
     {
-        var restParameters = TransformParameters(SetOptions.IdEndpointOptions, parameters);
-
         if (SetOptions.IdEndpointOptions.GetPathFunc is not null)
         {
             if (id is null)
             {
                 var pathFunc = SetOptions.IdEndpointOptions.GetPathFunc!;
-                return GetFullPath(pathFunc(id, parameters), restParameters);
+                return GetFullPath(pathFunc(id, parameters), false, parameters);
             }
 
-            if (id is not TKey idCasted) 
-                throw new ArgumentException($"Id must be of type '{typeof(TKey).Name}'.");
+            if (id is not TKey idCasted) throw new ArgumentException($"Id must be of type {typeof(TKey).Name}");
 
             var idEndpoint = SetOptions.IdEndpointOptions.GetPathFunc(idCasted, parameters);
-            return GetFullPath(idEndpoint, restParameters);
+            return GetFullPath(idEndpoint, false, parameters);
         }
         else
         {
-            var idEndpoint = SetOptions.EndpointOptions.Path is not null 
-                ? Path.Combine(SetOptions.EndpointOptions.Path, id!.ToString()!) 
-                : id!.ToString()!;
-            
-            return GetFullPath(idEndpoint, restParameters);
+            var idEndpoint = SetOptions.EndpointOptions.Path is not null ? Path.Combine(SetOptions.EndpointOptions.Path, id!.ToString()!) : id!.ToString()!;
+            return GetFullPath(idEndpoint, true, parameters);
         }
     }
 
@@ -64,18 +53,15 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         return SetOptions.EndpointOptions.Path;
     }
 
-    private RequestUrlParameterParsingResult GetFullPath(string path, IRestRequestParameters? parameters = null)
+    private RequestUrlParameterParsingResult GetFullPath(string path, bool handleParameters, object[]? parameters = null)
     {
-        // TODO: Review this condition
-        if (ServiceOptions.BaseUrl is null) 
-            return new RequestUrlParameterParsingResult(path, string.Empty);
+        if (ServiceOptions.BaseUrl is null) return new RequestUrlParameterParsingResult(path, string.Empty);
 
         var baseUrl = ServiceOptions.BaseUrl.TrimEnd('/');
         var localPath = path.TrimStart('/');
         var resultPath = $"{baseUrl}/{localPath}";
 
-        if (parameters is not null) 
-            return RequestParameterParsingUtility.ParseRequestUrl(resultPath, parameters);
+        if (handleParameters) return RequestParameterParsingUtility.ParseRequestUrl(resultPath, parameters);
 
         return new RequestUrlParameterParsingResult(resultPath, string.Empty);
     }
