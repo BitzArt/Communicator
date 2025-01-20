@@ -18,7 +18,7 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
 }
 
 internal class FluxRestSetIdEndpointOptions<TModel, TKey>
-: FluxRestSetEndpointOptions<TModel, TKey>, IFluxRestSetIdEndpointOptions<TModel>
+    : FluxRestSetEndpointOptions<TModel, TKey>, IFluxRestSetIdEndpointOptions<TModel>
     where TModel : class
 {
     public IGetPathByIdFunc GetPathFunc { get; set; } = new GetPathByIdFunc<TModel, TKey>();

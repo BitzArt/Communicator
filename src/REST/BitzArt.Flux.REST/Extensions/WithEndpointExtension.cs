@@ -13,13 +13,15 @@ public static class WithEndpointExtension
     /// <returns>
     /// The <see cref="IFluxRestSetBuilder{TModel, TKey}"/> with the endpoint configured.
     /// </returns>
-    public static IFluxRestSetEndpointBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey>(endpoint);
-        return new FluxRestSetEndpointBuilder<TModel, TKey>(builder, options);
+        builder.SetOptions.EndpointOptions = options;
+
+        return builder;
     }
 
     /// <summary>
@@ -28,13 +30,15 @@ public static class WithEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetEndpointBuilder<TModel, TKey, TParameters> WithEndpoint<TModel, TKey, TParameters>(
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint);
-        return new FluxRestSetEndpointBuilder<TModel, TKey, TParameters>(builder, options);
+        builder.SetOptions.EndpointOptions = options;
+
+        return builder;
     }
 
     /// <summary>
@@ -43,7 +47,7 @@ public static class WithEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetEndpointBuilder<TModel, TKey, RequestParameters> WithEndpoint<TModel, TKey>(
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
         Func<RequestParameters, RestRequestParameters> transformParameters)
@@ -56,7 +60,7 @@ public static class WithEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetEndpointBuilder<TModel, TKey, TInputParameters> WithEndpoint<TModel, TKey, TInputParameters>(
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
         Func<TInputParameters, RestRequestParameters> transformParameters)
@@ -69,7 +73,7 @@ public static class WithEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetEndpointBuilder<TModel, TKey, RequestParameters> WithEndpoint<TModel, TKey, TOutputParameters>(
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
         Func<RequestParameters, TOutputParameters> transformParameters)
@@ -83,7 +87,7 @@ public static class WithEndpointExtension
     /// <returns>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
     /// </returns>
-    public static IFluxRestSetEndpointBuilder<TModel, TKey, TInputParameters> WithEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(
+    public static IFluxRestSetBuilder<TModel, TKey> WithEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
         Func<TInputParameters, TOutputParameters> transformParameters)
@@ -91,6 +95,8 @@ public static class WithEndpointExtension
         where TOutputParameters : IRestRequestParameters
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));
-        return new FluxRestSetEndpointBuilder<TModel, TKey, TInputParameters>(builder, options);
+        builder.SetOptions.EndpointOptions = options;
+
+        return builder;
     }
 }
