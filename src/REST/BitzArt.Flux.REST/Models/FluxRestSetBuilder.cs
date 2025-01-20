@@ -3,16 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestSetBuilder<TModel>(
-    IFluxRestServiceBuilder serviceBuilder
-    ) : FluxRestSetBuilder<TModel, object>(serviceBuilder)
+internal class FluxRestSetBuilder<TModel>(IFluxRestServiceBuilder serviceBuilder) : FluxRestSetBuilder<TModel, object>(serviceBuilder)
     where TModel : class
 {
 }
 
-internal class FluxRestSetBuilder<TModel, TKey>(
-    IFluxRestServiceBuilder serviceBuilder
-    ) : IFluxRestSetBuilder<TModel, TKey>
+internal class FluxRestSetBuilder<TModel, TKey>(IFluxRestServiceBuilder serviceBuilder) : IFluxRestSetBuilder<TModel, TKey>
     where TModel : class
 {
     public FluxRestSetOptions<TModel, TKey> SetOptions { get; set; } = new();
