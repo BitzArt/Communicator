@@ -33,7 +33,7 @@ public static class WithEndpointExtension
         string endpoint)
         where TModel : class
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint, null);
+        var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint);
         return new FluxRestSetEndpointBuilder<TModel, TKey, TParameters>(builder, options);
     }
 

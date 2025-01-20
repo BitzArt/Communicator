@@ -2,6 +2,12 @@
 
 namespace BitzArt.Flux;
 
+public interface IFluxRestSetIdEndpointBuilder<TModel, TKey, TInputParameters> : IFluxRestSetBuilder<TModel, TKey>
+    where TModel : class
+{
+    internal FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters> EndpointOptions { get; }
+}
+
 /// <summary>
 /// Flux REST set endpoint builder.
 /// </summary>
