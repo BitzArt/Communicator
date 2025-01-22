@@ -1,11 +1,14 @@
 ﻿namespace BitzArt.Flux.REST;
 
+/// <summary>
+/// <inheritdoc cref="IFluxRestSetEndpointOptionsCollection{TModel}"/>/>
+/// </summary>
 internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSetEndpointOptionsCollection<TModel>
     where TModel : class
 {
-    private readonly Dictionary<EnpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
+    private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
 
-    public void Add<TOptions>(TOptions options) 
+    public void Add<TOptions>(TOptions options)
         where TOptions : IFluxRestSetEndpointOptions<TModel>
     {
         switch (options)
@@ -36,12 +39,12 @@ internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSet
     private void Add(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel> endpointOptions, Type parameterizedOptionsType)
     {
         var endpointOptionsType = endpointOptions.GetType();
-        var inputParametersType = endpointOptions.GetType().GetInterfaces()
+        var inputParametersType = endpointOptionsType.GetType().GetInterfaces()
             .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == parameterizedOptionsType)
             .Select(x => x.GetGenericArguments()[1])
             .FirstOrDefault();
 
-        var signature = new EnpointSignature(endpointType, inputParametersType);
+        var signature = new EndpointSignature(endpointType, inputParametersType);
         if (!_values.TryAdd(signature, endpointOptions))
             throw new InvalidOperationException($"Options for endpoint type '{endpointType}' and input parameters type '{inputParametersType}' already added.");
     }
@@ -51,12 +54,12 @@ internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSet
 
     public IFluxRestSetEndpointOptions<TModel> Get(EndpointType endpointType, Type? inputParametersType = null)
     {
-        var signature = new EnpointSignature(endpointType, inputParametersType);
+        var signature = new EndpointSignature(endpointType, inputParametersType);
         if (_values.TryGetValue(signature, out var options))
             return options;
 
-        throw new InvalidOperationException($"Options for endpoint type {endpointType} and input parameters type {inputParametersType} not found.");
+        throw new InvalidOperationException($"Options for endpoint type '{endpointType}' and input parameters type '{inputParametersType}' not found.");
     }
 
-    private record EnpointSignature(EndpointType EndpointType, Type? InputParametersType);
+    private record EndpointSignature(EndpointType EndpointType, Type? InputParametersType);
 }
