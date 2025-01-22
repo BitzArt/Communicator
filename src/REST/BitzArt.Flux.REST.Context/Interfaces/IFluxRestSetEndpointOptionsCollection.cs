@@ -1,19 +1,17 @@
 ﻿namespace BitzArt.Flux.REST;
 
+/// <summary>
+/// Represents a collection of endpoint options for a set of endpoints. <br/>
+/// Endpoint is defined by it's <see cref="EndpointType"/> and the type of the input parameters.
+/// </summary>
+/// <typeparam name="TModel"></typeparam>
 internal interface IFluxRestSetEndpointOptionsCollection<TModel>
     where TModel : class
 {
-    public ICollection<IFluxRestSetEndpointOptions<TModel>> EndpointOptions { get; }
+    public IFluxRestSetEndpointOptions<TModel, TInputParameters> Get<TInputParameters>(EndpointType type);
 
-    // TODO:  ICollection<IFluxRestSetPageEndpointOptions<TModel>> 
-    // See: https://github.com/BitzArt/Flux/issues/4
-    public ICollection<IFluxRestSetEndpointOptions<TModel>> PageEndpointOptions { get; }
+    public IFluxRestSetEndpointOptions<TModel> Get(EndpointType type, Type? inputParametersType = null);
 
-    public ICollection<IFluxRestSetIdEndpointOptions<TModel>> IdEndpointOptions { get; }
-
-    public IFluxRestSetEndpointOptions<TModel, TInputParameters> Get<TInputParameters>(FluxRestSetEndpointOptionsType type);
-
-    public IFluxRestSetEndpointOptions<TModel> Get(FluxRestSetEndpointOptionsType type, Type inputParametersType); 
-
-    public void Add<TInputParameters>(FluxRestSetEndpointOptionsType type, IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions);
+    public void Add<TOptions>(TOptions options)
+        where TOptions : IFluxRestSetEndpointOptions<TModel>;
 }

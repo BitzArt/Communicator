@@ -19,7 +19,7 @@ public static class WithEndpointExtension
         where TModel : class
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey>(endpoint);
-        builder.SetOptions.EndpointOptionsCollection.Add(FluxRestSetEndpointOptionsType.Endpoint, options);
+        builder.SetOptions.EndpointOptionsCollection.Add(EndpointType.Default, options);
 
         return builder;
     }
@@ -36,7 +36,7 @@ public static class WithEndpointExtension
         where TModel : class
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint);
-        builder.SetOptions.EndpointOptionsCollection.Add(FluxRestSetEndpointOptionsType.Endpoint, options);
+        builder.SetOptions.EndpointOptionsCollection.Add(EndpointType.Default, options);
 
         return builder;
     }
@@ -95,7 +95,7 @@ public static class WithEndpointExtension
         where TOutputParameters : IRestRequestParameters
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));
-        builder.SetOptions.EndpointOptionsCollection.Add(FluxRestSetEndpointOptionsType.Endpoint, options);
+        builder.SetOptions.EndpointOptionsCollection.Add(EndpointType.Default, options);
 
         return builder;
     }
