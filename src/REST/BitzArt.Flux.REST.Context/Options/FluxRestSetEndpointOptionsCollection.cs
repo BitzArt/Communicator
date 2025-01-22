@@ -1,6 +1,4 @@
-﻿
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSetEndpointOptionsCollection<TModel>
     where TModel : class
@@ -26,24 +24,26 @@ internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSet
         }
     }
 
-    private void Add(IFluxRestSetEndpointOptions<TModel> idOptions)
-        => Add(EndpointType.Default, idOptions, typeof(IFluxRestSetEndpointOptions<,>));
+    private void Add(IFluxRestSetEndpointOptions<TModel> endpointOptions)
+        => Add(EndpointType.Default, endpointOptions, typeof(IFluxRestSetEndpointOptions<,>));
 
-    private void Add(IFluxRestSetIdEndpointOptions<TModel> idOptions)
-        => Add(EndpointType.Id, idOptions, typeof(IFluxRestSetIdEndpointOptions<,>));
+    private void Add(IFluxRestSetIdEndpointOptions<TModel> idEndpointOptions)
+        => Add(EndpointType.Id, idEndpointOptions, typeof(IFluxRestSetIdEndpointOptions<,>));
 
-    private void Add(IFluxRestSetPageEndpointOptions<TModel> idOptions)
-        => Add(EndpointType.Page, idOptions, typeof(IFluxRestSetPageEndpointOptions<,>));
+    private void Add(IFluxRestSetPageEndpointOptions<TModel> pageEnpointOptions)
+        => Add(EndpointType.Page, pageEnpointOptions, typeof(IFluxRestSetPageEndpointOptions<,>));
 
-    private void Add(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel> options, Type parameterizedOptionsType)
+    private void Add(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel> endpointOptions, Type parameterizedOptionsType)
     {
-        var type = options.GetType();
-        var inputParametersType = type.GetInterfaces()
-            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == parameterizedOptionsType)
-            .Select(i => i.GetGenericArguments()[1])
+        var endpointOptionsType = endpointOptions.GetType();
+        var inputParametersType = endpointOptions.GetType().GetInterfaces()
+            .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == parameterizedOptionsType)
+            .Select(x => x.GetGenericArguments()[1])
             .FirstOrDefault();
 
-        _values.Add(new(endpointType, inputParametersType), options);
+        var signature = new EnpointSignature(endpointType, inputParametersType);
+        if (!_values.TryAdd(signature, endpointOptions))
+            throw new InvalidOperationException($"Options for endpoint type '{endpointType}' and input parameters type '{inputParametersType}' already added.");
     }
 
     public IFluxRestSetEndpointOptions<TModel, TInputParameters> Get<TInputParameters>(EndpointType endpointType)

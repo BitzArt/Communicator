@@ -18,8 +18,8 @@ public static class WithPageEndpointExtension
         string endpoint)
         where TModel : class
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey>(endpoint);
-        builder.SetOptions.EndpointOptionsCollection.Add(EndpointType.Page, options);
+        var options = new FluxRestSetPageEndpointOptions<TModel, TKey>(endpoint);
+        builder.SetOptions.EndpointOptionsCollection.Add(options);
 
         return builder;
     }
@@ -35,8 +35,8 @@ public static class WithPageEndpointExtension
         string endpoint)
         where TModel : class
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TParameters>(endpoint, null);
-        builder.SetOptions.EndpointOptionsCollection.Add(EndpointType.Page, options);
+        var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TParameters>(endpoint);
+        builder.SetOptions.EndpointOptionsCollection.Add(options);
 
         return builder;
     }
@@ -94,8 +94,8 @@ public static class WithPageEndpointExtension
         where TModel : class
         where TOutputParameters : IRestRequestParameters
     {
-        var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));
-        builder.SetOptions.EndpointOptionsCollection.Add(EndpointType.Page, options);
+        var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));
+        builder.SetOptions.EndpointOptionsCollection.Add(options);
 
         return builder;
     }
