@@ -27,6 +27,7 @@ public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValu
     {
     }
 
+    // TODO: GetUrlParameters
     protected virtual Func<Dictionary<string, object>> GetDictionary => () => 
     { 
         if (GetParameters is null) return _parameters;
@@ -36,6 +37,8 @@ public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValu
     };
 
     protected virtual Func<ICollection<KeyValuePair<string, object>>>? GetParameters => null;
+
+    public void Add(string key, object value) => Add(new KeyValuePair<string, object>(key, value));
 
     /// <inheritdoc/>
     public void Add(KeyValuePair<string, object> item) => _parameterCollection.Add(item);

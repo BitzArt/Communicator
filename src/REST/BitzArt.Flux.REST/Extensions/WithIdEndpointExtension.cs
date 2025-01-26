@@ -19,12 +19,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(this IFluxRestSetBuilder<TModel, TKey> builder, string endpoint)
         where TModel : class
-    {
-        var options = new FluxRestSetIdEndpointOptions<TModel, TKey>(endpoint, (key) => endpoint);
-        builder.SetOptions.EndpointOptionsCollection.Add(options);
-
-        return builder;
-    }
+        => builder.WithIdEndpoint<TModel, TKey, RestRequestParameters?>(endpoint);
 
     /// <summary>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -51,12 +46,7 @@ public static class WithIdEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         Func<TKey?, string> getEndpoint)
         where TModel : class
-    {
-        var options = new FluxRestSetIdEndpointOptions<TModel, TKey>(null, getEndpoint);
-        builder.SetOptions.EndpointOptionsCollection.Add(options);
-        
-        return builder;
-    }
+        => builder.WithIdEndpoint<TModel, TKey, RestRequestParameters?>(getEndpoint);
 
     /// <summary>
     /// <inheritdoc cref="WithIdEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>

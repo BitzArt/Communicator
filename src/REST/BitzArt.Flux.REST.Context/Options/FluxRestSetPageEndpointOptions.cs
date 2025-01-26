@@ -7,9 +7,3 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
     where TModel : class
 {
 }
-
-internal class FluxRestSetPageEndpointOptions<TModel, TKey>(string? path = null)
-    : FluxRestSetEndpointOptions<TModel, TKey>(path), IFluxRestSetPageEndpointOptions<TModel>
-    where TModel : class
-{
-}

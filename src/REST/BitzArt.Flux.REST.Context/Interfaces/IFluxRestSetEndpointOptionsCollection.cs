@@ -10,8 +10,5 @@ internal interface IFluxRestSetEndpointOptionsCollection<TModel>
 {
     public IFluxRestSetEndpointOptions<TModel, TInputParameters> Get<TInputParameters>(EndpointType endpointType);
 
-    public IFluxRestSetEndpointOptions<TModel> Get(EndpointType endpointType, Type? inputParametersType = null);
-
-    public void Add<TEndpointOptions>(TEndpointOptions options)
-        where TEndpointOptions : IFluxRestSetEndpointOptions<TModel>;
+    public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions);
 }

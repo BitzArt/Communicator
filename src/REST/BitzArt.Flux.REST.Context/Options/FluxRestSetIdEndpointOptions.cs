@@ -17,19 +17,6 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
     }
 }
 
-internal class FluxRestSetIdEndpointOptions<TModel, TKey>
-    : FluxRestSetEndpointOptions<TModel, TKey>, IFluxRestSetIdEndpointOptions<TModel>
-    where TModel : class
-{
-    public IGetPathByIdFunc GetPathFunc { get; set; } = new GetPathByIdFunc<TModel, TKey>();
-
-    public FluxRestSetIdEndpointOptions(string? path = null, Func<TKey, string>? getPath = null) : base(path)
-    {
-        if (getPath is not null)
-            GetPathFunc.Value = getPath as Func<object?, string>;
-    }
-}
-
 file class GetPathByIdFunc<TModel, TKey>() : IGetPathByIdFunc
     where TModel : class
 {

@@ -17,12 +17,7 @@ public static class WithPageEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
-    {
-        var options = new FluxRestSetPageEndpointOptions<TModel, TKey>(endpoint);
-        builder.SetOptions.EndpointOptionsCollection.Add(options);
-
-        return builder;
-    }
+        => builder.WithPageEndpoint<TModel, TKey, RestRequestParameters?>(endpoint);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
