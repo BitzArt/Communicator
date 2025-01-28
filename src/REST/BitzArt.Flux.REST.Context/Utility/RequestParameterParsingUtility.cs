@@ -6,49 +6,52 @@ namespace BitzArt.Flux;
 
 internal partial class RequestParameterParsingUtility
 {
-    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, object[]? parameters)
+    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IRestRequestParameters? parameters = null)
     {
-        var logBuilder = new StringBuilder();
-
         var matches = ParameterRegex().Matches(path);
         if (matches.Count == 0) return new RequestUrlParameterParsingResult(path, string.Empty);
 
         if (parameters is null) throw new ParametersNotFoundException();
 
-        var requiredCount = matches.Count;
-        var foundCount = parameters.Length;
+        var resultBuilder = new StringBuilder(path);
+        var logBuilder = new StringBuilder('\n');
 
-        if (requiredCount != foundCount) throw new ParameterCountDidNotMatchException(foundCount, requiredCount);
-
-        var result = path;
-        logBuilder.Append('\n');
-
-        for (int counter = 0; counter < requiredCount; counter++)
+        foreach (Match match in matches)
         {
-            var match = matches[counter];
-            var paramName = match.Groups[1].Value;
-            var value = parameters[counter].ToString();
-            result = result.Replace(match.Value, value);
+            var parameterName = match.Groups[1].Value;
+            var parameter = TryGetParameter(parameters, parameterName);
 
-            if (counter > 0) logBuilder.Append("; ");
-            logBuilder.Append($"{paramName}: {value}");
+            resultBuilder.Replace(match.Value, parameter.Value.ToString());
+
+            if (logBuilder.Length > 1) logBuilder.Append("; ");
+            logBuilder.Append($"{parameterName}: {parameter.Value}");
         }
 
-        return new RequestUrlParameterParsingResult(result, logBuilder.ToString());
+        return new RequestUrlParameterParsingResult(resultBuilder.ToString(), logBuilder.ToString());
+    }
+
+    private static KeyValuePair<string, object> TryGetParameter(IRestRequestParameters parameters, string parameterName)
+    {
+        try
+        {
+            return parameters.Parameters.First(x => x.Key == parameterName);
+        }
+        catch (InvalidOperationException)
+        {
+            throw new ParameterNotFoundException(parameterName);
+        }
     }
 
     [GeneratedRegex("{(.*?)}")]
     private static partial Regex ParameterRegex();
-}
 
-file class ParametersNotFoundException : Exception
-{
-    public ParametersNotFoundException()
-        : base("Parameters are specified in endpoint configuration but not found in the request.")
-    { }
-}
+    private class ParametersNotFoundException() 
+        : Exception("Parameters are specified in endpoint configuration but not found in the request.")
+    {
+    }
 
-file class ParameterCountDidNotMatchException(int found, int required)
-    : Exception($"Number of parameters in a request ({found}) did not match number of required parameters ({required}) for this endpoint.")
-{
+    private class ParameterNotFoundException(string parameterName)
+        : Exception($"Parameter '{parameterName}' is specified in endpoint configuration but not found in the request.")
+    {
+    } 
 }

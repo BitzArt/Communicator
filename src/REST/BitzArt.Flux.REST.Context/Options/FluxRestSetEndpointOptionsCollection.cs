@@ -18,8 +18,8 @@ internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSet
             case IFluxRestSetPageEndpointOptions<TModel, TInputParameters> pageEnpointOptions:
                 Add(EndpointType.Page, pageEnpointOptions);
                 break;
-            case IFluxRestSetEndpointOptions<TModel, TInputParameters> defaultEndpointoptions:
-                Add(EndpointType.Default, defaultEndpointoptions);
+            case IFluxRestSetEndpointOptions<TModel, TInputParameters> defaultEndpointOptions:
+                Add(EndpointType.Default, defaultEndpointOptions);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown endpoint options type '{endpointOptions.GetType()}'.");
