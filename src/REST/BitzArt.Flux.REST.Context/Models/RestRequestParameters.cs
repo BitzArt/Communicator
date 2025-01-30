@@ -4,13 +4,13 @@ namespace BitzArt.Flux;
 
 public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValuePair<string, object>>
 {
-    public Dictionary<string, object> Parameters => GetDictionary.Invoke();
+    public Dictionary<string, object> ValueMap => GetDictionary.Invoke();
 
     private readonly Dictionary<string, object> _parameters = []; 
 
-    ICollection<KeyValuePair<string, object>> IRequestParameters<KeyValuePair<string, object>>.Parameters => Parameters; 
+    ICollection IRequestParameters.Values => ValueMap;
 
-    private ICollection<KeyValuePair<string, object>> _parameterCollection => Parameters;
+    private ICollection<KeyValuePair<string, object>> _parameterCollection => ValueMap;
 
     /// <inheritdoc/>
     public int Count => _parameterCollection.Count;

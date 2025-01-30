@@ -19,27 +19,17 @@ internal partial class RequestParameterParsingUtility
         foreach (Match match in matches)
         {
             var parameterName = match.Groups[1].Value;
-            var parameter = TryGetParameter(parameters, parameterName);
+            var found = parameters.ValueMap.TryGetValue(parameterName, out var value);
 
-            resultBuilder.Replace(match.Value, parameter.Value.ToString());
+            if (!found) throw new ParameterNotFoundException(parameterName);
+
+            resultBuilder.Replace(match.Value, value!.ToString());
 
             if (logBuilder.Length > 1) logBuilder.Append("; ");
-            logBuilder.Append($"{parameterName}: {parameter.Value}");
+            logBuilder.Append($"{parameterName}: {value}");
         }
 
         return new RequestUrlParameterParsingResult(resultBuilder.ToString(), logBuilder.ToString());
-    }
-
-    private static KeyValuePair<string, object> TryGetParameter(IRestRequestParameters parameters, string parameterName)
-    {
-        try
-        {
-            return parameters.Parameters.First(x => x.Key == parameterName);
-        }
-        catch (InvalidOperationException)
-        {
-            throw new ParameterNotFoundException(parameterName);
-        }
     }
 
     [GeneratedRegex("{(.*?)}")]

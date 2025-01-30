@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
     where TModel : class

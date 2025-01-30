@@ -1,5 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
-public interface IRestRequestParameters : IRequestParameters<KeyValuePair<string, object>>
+public interface IRestRequestParameters : IRequestParameters
 {
+    public Dictionary<string, object> ValueMap { get; }
 }

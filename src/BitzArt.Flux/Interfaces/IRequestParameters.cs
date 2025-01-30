@@ -1,6 +1,8 @@
-﻿namespace BitzArt.Flux;
+﻿using System.Collections;
 
-public interface IRequestParameters<T>
+namespace BitzArt.Flux;
+
+public interface IRequestParameters
 {
-    public ICollection<T> Parameters { get; }
+    public ICollection Values { get; }
 }

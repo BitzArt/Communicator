@@ -1,9 +1,10 @@
-﻿namespace BitzArt.Flux.REST;
+﻿
+namespace BitzArt.Flux.REST;
 
 /// <summary>
-/// <inheritdoc cref="IFluxRestSetEndpointOptionsCollection{TModel}"/>/>
+/// <inheritdoc cref="IFluxRestSetEndpointsCollection{TModel}"/>/>
 /// </summary>
-internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSetEndpointOptionsCollection<TModel>
+internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpointsCollection<TModel>
     where TModel : class
 {
     private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
@@ -46,7 +47,7 @@ internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSet
         }
     }
 
-    public IFluxRestSetEndpointOptions<TModel, TInputParameters> Get<TInputParameters>(EndpointType endpointType)
+    private IFluxRestSetEndpointOptions<TModel, TInputParameters>? Get<TInputParameters>(EndpointType endpointType)
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
@@ -54,7 +55,7 @@ internal class FluxRestSetEndpointOptionsCollection<TModel, TKey> : IFluxRestSet
         if (_values.TryGetValue(signature, out var endpointOptions))
             return (IFluxRestSetEndpointOptions<TModel, TInputParameters>)endpointOptions;
 
-        throw new InvalidOperationException($"Options for endpoint type '{endpointType}' and input parameters type '{inputParametersType}' not found.");
+        return null;
     }
 
     private record EndpointSignature(EndpointType EndpointType, Type? InputParametersType);

@@ -14,7 +14,8 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
     public abstract Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default);
 
     /// <inheritdoc/>
-    public abstract Task<IEnumerable<TModel>> GetAllAsync<TParameter>(IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default);
+    public abstract Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
+        where TInputParameters : class, IRequestParameters;
 
     // ============== GET PAGE =============
 
