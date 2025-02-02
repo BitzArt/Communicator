@@ -1,7 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
 public partial interface IFluxSetContext<TModel>
-    where TModel : class
 {
     /// <summary>
     /// Fetches a single object from the set by its key.
@@ -9,7 +8,8 @@ public partial interface IFluxSetContext<TModel>
     public Task<TModel> GetAsync(object? id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="GetAsync(object?, CancellationToken)"/>
-    public Task<TModel> GetAsync<TParameter>(object? id, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default);
+    public Task<TModel> GetAsync<TInputParameters>(object? id, TInputParameters parameters, CancellationToken cancellationToken = default) 
+        where TInputParameters : class, IRequestParameters;
 }
 
 public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
@@ -19,5 +19,6 @@ public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     public Task<TModel> GetAsync(TKey? id, CancellationToken cancellationToken = default);
 
     /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, CancellationToken)"/>
-    public Task<TModel> GetAsync<TParameter>(TKey? id, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default);
+    public Task<TModel> GetAsync<TInputParameters>(TKey? id, TInputParameters parameters, CancellationToken cancellationToken = default)
+        where TInputParameters : class, IRequestParameters;
 }

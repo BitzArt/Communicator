@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Text;
-using System.Text.Json;
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel, TKey>
     where TModel : class
@@ -15,10 +11,10 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
         throw new NotImplementedException();
     }
 
-    public override Task<TResponse> UpdateAsync<TParameter, TResponse>(TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default)
-        => UpdateAsync<TParameter, TResponse>(id: default, model, parameters, partial, cancellationToken);
+    public override Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
+        => UpdateAsync<TInputParameters, TResponse>(id: default, model, parameters, partial, cancellationToken);
 
-    public override async Task<TResponse> UpdateAsync<TParameter, TResponse>(TKey? id, TModel model, IRequestParameters<TParameter> parameters, bool partial = false, CancellationToken cancellationToken = default)
+    public override async Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey? id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

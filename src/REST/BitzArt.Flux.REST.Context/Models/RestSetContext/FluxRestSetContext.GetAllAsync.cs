@@ -3,7 +3,6 @@
 namespace BitzArt.Flux.REST;
 
 internal partial class FluxRestSetContext<TModel, TKey>
-    where TModel : class
 {
     public override async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default)
     {

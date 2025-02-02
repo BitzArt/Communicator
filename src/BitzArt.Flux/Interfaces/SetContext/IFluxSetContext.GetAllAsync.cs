@@ -1,7 +1,6 @@
 ﻿namespace BitzArt.Flux;
 
 public partial interface IFluxSetContext<TModel>
-    where TModel : class
 {
     /// <summary>
     /// Fetches all objects from the set.

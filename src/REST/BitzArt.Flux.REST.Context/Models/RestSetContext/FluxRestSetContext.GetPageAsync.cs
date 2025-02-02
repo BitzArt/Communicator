@@ -10,7 +10,7 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
         throw new NotImplementedException();
     }
 
-    public override async Task<PageResult<TModel>> GetPageAsync<TParameter>(PageRequest pageRequest, IRequestParameters<TParameter> parameters, CancellationToken cancellationToken = default)
+    public override async Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
