@@ -6,6 +6,10 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
 {
     public IGetPathByIdFunc GetPathFunc { get; set; } = new GetPathByIdFunc<TModel, TKey>();
 
+    public static new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters> Instance => instance ?? new();
+
+    private static readonly FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>? instance;
+
     public FluxRestSetIdEndpointOptions(
         string? path = null,
         Func<TKey, string>? getPath = null,

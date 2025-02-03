@@ -1,15 +1,12 @@
-﻿
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
-/// <summary>
-/// <inheritdoc cref="IFluxRestSetEndpointsCollection{TModel}"/>/>
-/// </summary>
-internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpointsCollection<TModel>
+internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
     private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
 
     public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
+        where TInputParameters : class, IRequestParameters
     {
         switch (endpointOptions)
         {
@@ -28,10 +25,11 @@ internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpoin
     }
 
     private void Add<TInputParameters>(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
+        where TInputParameters: class, IRequestParameters
     {
         var inputParametersType = typeof(TInputParameters);
-
         var signature = new EndpointSignature(endpointType, inputParametersType);
+
         if (!_values.TryAdd(signature, endpointOptions))
             throw new InvalidOperationException($"Options for endpoint type '{endpointType}' and input parameters type '{inputParametersType}' already registered.");
 
@@ -47,7 +45,19 @@ internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpoin
         }
     }
 
-    private IFluxRestSetEndpointOptions<TModel, TInputParameters>? Get<TInputParameters>(EndpointType endpointType)
+    public HttpRequestMessage Resolve<TInputParameters, TKey>(
+        EndpointType endpointType,
+        IRequestPreparationParameters parameters)
+        where TInputParameters : class, IRequestParameters
+    {
+        var endpointOptions = ResolveOptions<TInputParameters>(endpointType)!;
+        HttpRequestMessage requestMessage = endpointOptions.PrepareRequest(parameters);
+
+        return requestMessage;
+    }
+
+    private IFluxRestSetEndpointOptions<TModel, TInputParameters> ResolveOptions<TInputParameters>(EndpointType endpointType)
+        where TInputParameters : class, IRequestParameters
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
@@ -55,7 +65,16 @@ internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpoin
         if (_values.TryGetValue(signature, out var endpointOptions))
             return (IFluxRestSetEndpointOptions<TModel, TInputParameters>)endpointOptions;
 
-        return null;
+        var a = "";
+        var b = string.Empty;
+
+        return GetDefaultEndpointOptions<TInputParameters>();
+    }
+
+    private IFluxRestSetEndpointOptions<TModel, TInputParameters> GetDefaultEndpointOptions<TInputParameters>()
+        where TInputParameters : IRequestParameters
+    {
+        return new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>();
     }
 
     private record EndpointSignature(EndpointType EndpointType, Type? InputParametersType);

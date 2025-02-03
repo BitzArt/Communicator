@@ -5,7 +5,7 @@ internal class FluxRestSetOptions<TModel, TKey> : IFluxRestSetOptions<TModel>
 {
     public FluxRestSetEndpointCollection<TModel, TKey> EndpointCollection { get; } = new();
 
-    IFluxRestSetEndpointsCollection<TModel> IFluxRestSetOptions<TModel>.EndpointsCollection => EndpointCollection;
+    IFluxRestSetEndpointCollection<TModel> IFluxRestSetOptions<TModel>.EndpointCollection => EndpointCollection;
 
     public Type? KeyType => typeof(TKey);
 }
