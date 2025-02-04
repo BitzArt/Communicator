@@ -29,6 +29,7 @@ public static class WithPageEndpointExtension
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint)
         where TModel : class
+        where TParameters : IRequestParameters?
     {
         var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TParameters>(endpoint);
         builder.SetOptions.EndpointCollection.Add(options);
@@ -45,9 +46,9 @@ public static class WithPageEndpointExtension
     public static IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<RequestParameters, RestRequestParameters> transformParameters)
+        Func<RequestParameters?, RestRequestParameters> transformParameters)
         where TModel : class
-        => builder.WithPageEndpoint<TModel, TKey, RequestParameters, RestRequestParameters>(endpoint, transformParameters);
+        => builder.WithPageEndpoint<TModel, TKey, RequestParameters?, RestRequestParameters>(endpoint, transformParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -58,9 +59,10 @@ public static class WithPageEndpointExtension
     public static IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<TInputParameters, RestRequestParameters> transformParameters)
+        Func<TInputParameters?, RestRequestParameters> transformParameters)
         where TModel : class
-        => builder.WithPageEndpoint<TModel, TKey, TInputParameters, RestRequestParameters>(endpoint, transformParameters);
+        where TInputParameters : IRequestParameters?
+        => builder.WithPageEndpoint<TModel, TKey, TInputParameters?, RestRequestParameters>(endpoint, transformParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -71,10 +73,10 @@ public static class WithPageEndpointExtension
     public static IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<RequestParameters, TOutputParameters> transformParameters)
+        Func<RequestParameters?, TOutputParameters> transformParameters)
         where TModel : class
         where TOutputParameters : IRestRequestParameters
-        => builder.WithPageEndpoint<TModel, TKey, RequestParameters, TOutputParameters>(endpoint, transformParameters);
+        => builder.WithPageEndpoint<TModel, TKey, RequestParameters?, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithPageEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -85,8 +87,9 @@ public static class WithPageEndpointExtension
     public static IFluxRestSetBuilder<TModel, TKey> WithPageEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
         string endpoint,
-        Func<TInputParameters, TOutputParameters> transformParameters)
+        Func<TInputParameters?, TOutputParameters> transformParameters)
         where TModel : class
+        where TInputParameters: IRequestParameters?
         where TOutputParameters : IRestRequestParameters
     {
         var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));

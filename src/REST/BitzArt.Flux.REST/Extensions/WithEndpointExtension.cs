@@ -48,7 +48,7 @@ public static class WithEndpointExtension
         string endpoint,
         Func<RequestParameters?, RestRequestParameters> transformParameters)
         where TModel : class
-        => builder.WithEndpoint<TModel, TKey, RequestParameters, RestRequestParameters>(endpoint, transformParameters);
+        => builder.WithEndpoint<TModel, TKey, RequestParameters?, RestRequestParameters>(endpoint, transformParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -61,8 +61,8 @@ public static class WithEndpointExtension
         string endpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
         where TModel : class
-        where TInputParameters : class, IRequestParameters
-        => builder.WithEndpoint<TModel, TKey, TInputParameters, RestRequestParameters>(endpoint, transformParameters);
+        where TInputParameters : IRequestParameters?
+        => builder.WithEndpoint<TModel, TKey, TInputParameters?, RestRequestParameters>(endpoint, transformParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -76,7 +76,7 @@ public static class WithEndpointExtension
         Func<RequestParameters?, TOutputParameters> transformParameters)
         where TModel : class
         where TOutputParameters : IRestRequestParameters
-        => builder.WithEndpoint<TModel, TKey, RequestParameters, TOutputParameters>(endpoint, transformParameters);
+        => builder.WithEndpoint<TModel, TKey, RequestParameters?, TOutputParameters>(endpoint, transformParameters);
 
     /// <summary>
     /// <inheritdoc cref="WithEndpoint{TModel, TKey}(IFluxRestSetBuilder{TModel, TKey}, string)"/>
@@ -89,7 +89,7 @@ public static class WithEndpointExtension
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
         where TModel : class
-        where TInputParameters : class, IRequestParameters
+        where TInputParameters : IRequestParameters?
         where TOutputParameters : IRestRequestParameters
     {
         var options = new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(endpoint, (parameters) => transformParameters(parameters));

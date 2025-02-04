@@ -10,14 +10,9 @@ namespace BitzArt.Flux.REST;
 internal interface IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
-    public HttpRequestMessage Resolve<TInputParameters, TKey>(
-        EndpointType endpointType,
-        TInputParameters? requestParameters = default,
-        TKey? id = default,
-        PageRequest? pageRequest = null,
-        Func<string, HttpRequestMessage>? createRequestMessage = null) 
+    public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
         where TInputParameters : IRequestParameters?;
 
-    public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
+    public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)
         where TInputParameters : IRequestParameters?;
 }

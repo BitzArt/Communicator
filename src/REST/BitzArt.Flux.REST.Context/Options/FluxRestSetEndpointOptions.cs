@@ -30,7 +30,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
         var path = GetPath(parameters);
         var parse = RequestParameterParsingUtility.ParseRequestUrl(path, restRequestParameters);
 
-        var requestMessage = parameters.InitialCreateRequestMessageFunc(parse.Result);
+        var requestMessage = parameters.InitialCreateRequestMessageFunc!(parse.Result);
         return requestMessage;
     }
 
