@@ -12,9 +12,9 @@ public partial interface IFluxSetContext<TModel>
 
     /// <inheritdoc cref="AddAsync(TModel, CancellationToken)"/>/>
     public Task<TModel> AddAsync<TInputParameters>(TModel model, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     /// <inheritdoc cref="AddAsync(TModel, CancellationToken)"/>
     public Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 }

@@ -7,19 +7,21 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
 {
     public override async Task<PageResult<TModel>> GetPageAsync(PageRequest pageRequest, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Page, pageRequest, null, (path) =>
+            new HttpRequestMessage(HttpMethod.Get, path));
+
+        var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);
+
+        return await HandleRequestAsync<PageResult<TModel>>(requestMessage, cancellationToken);
     }
 
     public override async Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
+        var preparationParameters = new RequestPreparationParameters<TInputParameters, TKey>(EndpointType.Page, pageRequest, parameters, (path) =>
+             new HttpRequestMessage(HttpMethod.Get, path));
 
-    private string GetPageEndpoint()
-    {
-        if (SetOptions.PageEndpointOptions.Path is not null)
-            return SetOptions.PageEndpointOptions.Path;
+        var requestMessage = SetOptions.EndpointCollection.Resolve<TInputParameters>(preparationParameters);
 
-        return GetEndpoint();
+        return await HandleRequestAsync<PageResult<TModel>>(requestMessage, cancellationToken);
     }
 }

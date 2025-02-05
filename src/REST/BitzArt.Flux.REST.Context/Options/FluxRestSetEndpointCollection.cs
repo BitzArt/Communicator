@@ -48,7 +48,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpoin
     public HttpRequestMessage Resolve<TInputParameters>(IRequestPreparationParameters parameters)
         where TInputParameters : IRequestParameters?
     {
-        var endpointOptions = ResolveOptions<TInputParameters>(parameters.EndpointType)!;
+        var endpointOptions = ResolveOptions<TInputParameters>(parameters.EndpointType);
         var requestMessage = endpointOptions.PrepareRequest(parameters);
 
         return requestMessage;

@@ -9,7 +9,7 @@ public partial interface IFluxSetContext<TModel>
 
     /// <inheritdoc cref="GetAsync(object?, CancellationToken)"/>
     public Task<TModel> GetAsync<TInputParameters>(object? id, TInputParameters parameters, CancellationToken cancellationToken = default) 
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 }
 
 public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
@@ -20,5 +20,5 @@ public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
 
     /// <inheritdoc cref="IFluxSetContext{TModel}.GetAsync(object?, CancellationToken)"/>
     public Task<TModel> GetAsync<TInputParameters>(TKey? id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 }

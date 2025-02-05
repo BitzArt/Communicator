@@ -12,11 +12,11 @@ public partial interface IFluxSetContext<TModel>
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(object? id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(object? id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync(TModel model, bool partial = false, CancellationToken cancellationToken = default);
@@ -26,11 +26,11 @@ public partial interface IFluxSetContext<TModel>
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     /// <inheritdoc cref="UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 }
 
 public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
@@ -44,9 +44,9 @@ public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
 
     /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TModel> UpdateAsync<TInputParameters>(TKey? id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     /// <inheritdoc cref="IFluxSetContext{TModel}.UpdateAsync(object?, TModel, bool, CancellationToken)"/>
     public Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey? id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 }

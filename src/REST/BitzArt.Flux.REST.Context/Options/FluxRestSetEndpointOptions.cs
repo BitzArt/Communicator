@@ -22,34 +22,29 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     public HttpRequestMessage PrepareRequest(IRequestPreparationParameters parameters)
     {
         if (parameters.RequestParameters is not TInputParameters inputParameters)
-        {
             throw new UnreachableException();
-        }
 
-        var restRequestParameters = ProcessParameters(parameters, inputParameters);
+        var outputParameters = ProcessParameters(parameters, inputParameters);
         var path = GetPath(parameters);
-        var parse = RequestParameterParsingUtility.ParseRequestUrl(path, restRequestParameters);
+        var parse = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
 
-        var requestMessage = parameters.InitialCreateRequestMessageFunc!(parse.Result);
+        var requestMessage = parameters.InitialCreateRequestMessageFunc(parse.Result);
         return requestMessage;
     }
 
+    // TODO: implement method
     private protected virtual string GetPath(IRequestPreparationParameters parameters)
     {
-        throw new NotImplementedException();
+        return Path ?? string.Empty;
     }
 
     private IRestRequestParameters ProcessParameters(IRequestPreparationParameters parameters, TInputParameters inputParameters)
     {
         if (TransformParametersFunc is not null)
-        {
             return TransformParametersFunc.Invoke(inputParameters);
-        }
 
         if (parameters.RequestParameters is not IRestRequestParameters restRequestParameters)
-        {
             throw new ArgumentException();
-        }
 
         return restRequestParameters;
     }

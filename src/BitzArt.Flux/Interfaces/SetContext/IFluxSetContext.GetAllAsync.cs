@@ -9,5 +9,5 @@ public partial interface IFluxSetContext<TModel>
 
     /// <inheritdoc cref="GetAllAsync(CancellationToken)"/>
     public Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default) 
-         where TInputParameters : class, IRequestParameters;
+         where TInputParameters : IRequestParameters?;
 }

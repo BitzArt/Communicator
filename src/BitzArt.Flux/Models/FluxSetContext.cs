@@ -15,7 +15,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public abstract Task<IEnumerable<TModel>> GetAllAsync<TInputParameters>(TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     // ============== GET PAGE =============
 
@@ -28,12 +28,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public virtual Task<PageResult<TModel>> GetPageAsync<TInputParameters>(int offset, int limit, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters
+        where TInputParameters : IRequestParameters?
         => GetPageAsync(new PageRequest(offset, limit), parameters, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<PageResult<TModel>> GetPageAsync<TInputParameters>(PageRequest pageRequest, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     // ============== GET (Single) =========
 
@@ -50,7 +50,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public virtual Task<TModel> GetAsync<TInputParameters>(object? id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters
+        where TInputParameters : IRequestParameters?
     {
         if (id is not TKey idTyped) throw new InvalidOperationException("Invalid key type.");
 
@@ -59,7 +59,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public abstract Task<TModel> GetAsync<TInputParameters>(TKey? id, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     // ============== ADD ==================
 
@@ -72,12 +72,12 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public virtual Task<TModel> AddAsync<TInputParameters>(TModel model, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters
+        where TInputParameters : IRequestParameters?
         => AddAsync<TInputParameters, TModel>(model, parameters, cancellationToken);
 
     /// <inheritdoc/>
     public abstract Task<TResponse> AddAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     // ============== UPDATE BY ID =========
 
@@ -108,7 +108,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public abstract Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TKey? id, TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     // ============== UPDATE ===============
 
@@ -123,7 +123,7 @@ public abstract class FluxSetContext<TModel, TKey> : IFluxSetContext<TModel, TKe
 
     /// <inheritdoc/>
     public abstract Task<TResponse> UpdateAsync<TInputParameters, TResponse>(TModel model, TInputParameters parameters, bool partial = false, CancellationToken cancellationToken = default)
-        where TInputParameters : class, IRequestParameters;
+        where TInputParameters : IRequestParameters?;
 
     private static TResult Cast<TResult>(object? value)
     {

@@ -20,6 +20,18 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
         if (getPath is not null)
             GetPathFunc.Value = getPath as Func<object?, string>;
     }
+
+    private protected override string GetPath(IRequestPreparationParameters parameters)
+    {
+        var id = parameters.Id!;
+
+        if (GetPathFunc.Value is not null)
+            return GetPathFunc.Value(id);
+
+        return Path is not null 
+            ? System.IO.Path.Combine(Path, id.ToString()!) 
+            : id.ToString()!;
+    }
 }
 
 file class GetPathByIdFunc<TModel, TKey>() : IGetPathByIdFunc
@@ -27,12 +39,12 @@ file class GetPathByIdFunc<TModel, TKey>() : IGetPathByIdFunc
 {
     public Func<object?, string>? Value
     {
-        get => _value is null ? null : (key) =>
+        get => _value is null ? null : (id) =>
         {
-            if (key is not TKey keyTyped)
-                throw new InvalidOperationException($"Key type mismatch. Expected {typeof(TKey)}, but got {key?.GetType()}.");
+            if (id is not TKey idTyped)
+                throw new InvalidOperationException($"Id type mismatch. Expected {typeof(TKey)}, but got {id?.GetType()}.");
 
-            return _value.Invoke(keyTyped);
+            return _value.Invoke(idTyped);
         };
 
         set
@@ -43,7 +55,7 @@ file class GetPathByIdFunc<TModel, TKey>() : IGetPathByIdFunc
                 return;
             }
 
-            _value = (key) => value.Invoke(key);
+            _value = (id) => value.Invoke(id);
         }
     }
 
