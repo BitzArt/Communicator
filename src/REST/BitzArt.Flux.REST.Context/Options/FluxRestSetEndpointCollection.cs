@@ -8,6 +8,8 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
 
     public IFluxRestSetOptions<TModel> SetOptions { get; } = setOptions;
 
+    private readonly DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey> _defaultOptions = new();
+
     public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
         where TInputParameters : IRequestParameters?
     {
@@ -57,7 +59,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
         return requestMessage;
     }
 
-    private IFluxRestSetEndpointOptions<TModel, TInputParameters> ResolveOptions<TInputParameters>(EndpointType endpointType)
+    private IFluxRestSetEndpointOptions<TModel, TInputParameters> ResolveOptions<TInputParameters>(EndpointType endpointType, string? endpointName = null)
         where TInputParameters : IRequestParameters?
     {
         var inputParametersType = typeof(TInputParameters);
@@ -66,20 +68,13 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
         if (_values.TryGetValue(signature, out var endpointOptions))
             return (IFluxRestSetEndpointOptions<TModel, TInputParameters>)endpointOptions;
 
-        return GetDefaultEndpointOptions<TInputParameters>(endpointType);
-    }
+        if (endpointName is not null)
+            throw new Exception($"{endpointType.GetFriendlyEndpointTypeName()} with name: '{endpointName}' not found.");
 
-    private FluxRestSetEndpointOptions<TModel, TKey, TInputParameters> GetDefaultEndpointOptions<TInputParameters>(EndpointType endpointType)
-        where TInputParameters : IRequestParameters?
-    {
-        return endpointType switch
-        {
-            EndpointType.Id => FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>.GetDefaultInstance(SetOptions),
-            EndpointType.Page => FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>.GetDefaultInstance(SetOptions),
-            EndpointType.Default => FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>.GetDefaultInstance(SetOptions),
-            _ => throw new InvalidOperationException($"Unknown endpoint type '{endpointType}'."),
-        };
+        return _defaultOptions.GetDefaultInstance<TInputParameters>(SetOptions, endpointType);
     }
-
+    
+    // TODO: When implementing 'Named endpoints' functionality: add endpoint name,
+    // figure out resolve logic when enpoint name provided/not provided
     private record EndpointSignature(EndpointType EndpointType, Type InputParametersType);
 }

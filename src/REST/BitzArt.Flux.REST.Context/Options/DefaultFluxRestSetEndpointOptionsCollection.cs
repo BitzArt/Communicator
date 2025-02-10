@@ -1,26 +1,27 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Diagnostics;
 
 namespace BitzArt.Flux.REST;
 
-internal class DefaultFluxRestSetEndpointOptionsCollection<TOptions, TModel>(Func<IFluxRestSetOptions<TModel>, TOptions> createNew)
-    where TOptions : IFluxRestSetEndpointOptions<TModel>
+internal class DefaultFluxRestSetEndpointOptionsCollection<TModel, TKey>()
     where TModel : class
 {
-    public TOptions GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
+    private IFluxRestSetEndpointOptions<TModel>? _defaultEndpointOptions;
+
+    private IFluxRestSetPageEndpointOptions<TModel>? _pageEndpointOptions;
+
+    private IFluxRestSetIdEndpointOptions<TModel>? _idEndpointOptions;
+
+    public IFluxRestSetEndpointOptions<TModel, TInputParameters> GetDefaultInstance<TInputParameters>(IFluxRestSetOptions<TModel> setOptions, EndpointType endpointType)
+         where TInputParameters : IRequestParameters?
     {
-        if (name is null)
-            return _defaultUnnamedInstance ??= createNew.Invoke(setOptions);
+        var defaultOptions = endpointType switch
+        {
+            EndpointType.Default => _defaultEndpointOptions ??= new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions),
+            EndpointType.Page => _pageEndpointOptions ??= new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(setOptions),
+            EndpointType.Id => _idEndpointOptions ??= new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>(setOptions),
+            _ => throw new UnreachableException("Invalid endpoint type.")
+        };
 
-        var found = _defaultNamedInstances.TryGetValue(name, out var instance);
-        if (found) return instance!;
-
-        var newDefaultInstance = createNew.Invoke(setOptions);
-        _defaultNamedInstances[name] = newDefaultInstance;
-
-        return newDefaultInstance;
+        return (IFluxRestSetEndpointOptions<TModel, TInputParameters>)defaultOptions;
     }
-
-    private readonly ConcurrentDictionary<string, TOptions> _defaultNamedInstances = [];
-
-    private TOptions? _defaultUnnamedInstance;
 }

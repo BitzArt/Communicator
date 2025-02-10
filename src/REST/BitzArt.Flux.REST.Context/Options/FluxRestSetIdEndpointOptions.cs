@@ -5,7 +5,7 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
-    public Func<TKey?, string>? GetPathFunc {  get; set; }
+    public Func<TKey?, string>? GetPathFunc { get; set; }
 
     public FluxRestSetIdEndpointOptions(
         IFluxRestSetOptions<TModel> setOptions,
@@ -18,25 +18,20 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
             GetPathFunc = (id) => getPath(id);
     }
 
-    private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
-        = new((setOptions) => new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>(setOptions));
-
-    public new static FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters> GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
-        => _defaultOptions.GetDefaultInstance(setOptions, name);
-
+    // TODO: Refactor this method. Handle all cases
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {
-        throw new NotImplementedException();
-        //if (GetPathFunc is not null)
-        //{
-        //    return GetPathFunc(id);
-        //}
+        var id = parameters.Id;
 
-        //if (parameters.Id is null)
-        //    throw new Exception("");
+        if (GetPathFunc is not null)
+            return GetPathFunc((TKey?)id);
 
-        //return Path is not null
-        //    ? System.IO.Path.Combine(Path, id.ToString()!)
-        //    : id.ToString()!;
+        var result = CombinePath(
+            SetOptions.ServiceOptions.BaseUrl?.Trim('/'), 
+            SetOptions.Path?.Trim('/'), 
+            Path?.Trim('/'), 
+            id?.ToString());
+
+        return result;
     }
 }

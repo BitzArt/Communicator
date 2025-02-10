@@ -11,12 +11,6 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
-    private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
-        = new((setOptions) => new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(setOptions));
-
-    public new static FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters> GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
-        => _defaultOptions.GetDefaultInstance(setOptions, name);
-
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {
         if (parameters.PageRequest is null)

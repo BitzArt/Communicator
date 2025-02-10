@@ -18,11 +18,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     /// <inheritdoc/>
     public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
 
-    private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
-        = new((setOptions) => new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions));
-
-    public static FluxRestSetEndpointOptions<TModel, TKey, TInputParameters> GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
-        => _defaultOptions.GetDefaultInstance(setOptions, name);
+    
 
     public HttpRequestMessage PrepareRequest(IRequestPreparationParameters parameters)
     {
@@ -37,11 +33,12 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
         var path = GetInitialPath();
         var outputParameters = ProcessParameters(parameters);
         
-        return RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
+        var result = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
+        return result;
     }
 
     private protected virtual string GetInitialPath()
-        => CombinePath(SetOptions.ServiceOptions.BaseUrl, SetOptions.Path?.Trim('/'), Path?.Trim('/'));
+        => CombinePath(SetOptions.ServiceOptions.BaseUrl?.Trim('/'), SetOptions.Path?.Trim('/'), Path?.Trim('/'));
 
     private protected IRestRequestParameters? ProcessParameters(IRequestPreparationParameters parameters)
     {
