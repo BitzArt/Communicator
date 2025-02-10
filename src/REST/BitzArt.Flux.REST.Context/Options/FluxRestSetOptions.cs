@@ -13,7 +13,7 @@ internal class FluxRestSetOptions<TModel, TKey> : IFluxRestSetOptions<TModel>
 
     public string? Path { get; }
 
-    public FluxRestSetOptions(FluxRestServiceOptions serviceOptions, string? path)
+    public FluxRestSetOptions(FluxRestServiceOptions serviceOptions, string? path = null)
     {
         ServiceOptions = serviceOptions;
         EndpointCollection = new(this);

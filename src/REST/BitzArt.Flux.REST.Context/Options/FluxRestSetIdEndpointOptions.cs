@@ -5,7 +5,7 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
-    public Func<TKey?, string>? GetPathFunc;
+    public Func<TKey?, string>? GetPathFunc {  get; set; }
 
     public FluxRestSetIdEndpointOptions(
         IFluxRestSetOptions<TModel> setOptions,
@@ -15,7 +15,7 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
         : base(setOptions, path, transformParameters)
     {
         if (getPath is not null)
-            GetPathFunc = (id) => getPath(id!);
+            GetPathFunc = (id) => getPath(id);
     }
 
     private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
@@ -26,60 +26,17 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
 
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {
-        var idValid = ValidateId(parameters, out var id);
+        throw new NotImplementedException();
+        //if (GetPathFunc is not null)
+        //{
+        //    return GetPathFunc(id);
+        //}
 
-        if (GetPathFunc is not null)
-        {
-            return GetPathFunc(id);
-        }
+        //if (parameters.Id is null)
+        //    throw new Exception("");
 
-        if (parameters.Id is null)
-            throw new Exception("");
-
-        return Path is not null
-            ? System.IO.Path.Combine(Path, id.ToString()!)
-            : id.ToString()!;
+        //return Path is not null
+        //    ? System.IO.Path.Combine(Path, id.ToString()!)
+        //    : id.ToString()!;
     }
-
-    private TKey? ValidateId(IRequestPreparationParameters parameters)
-    {
-        return null;
-
-        if (parameters.Id is null)
-            return true;
-
-        if (parameters.Id is not TKey idCasted)
-            return false;
-
-        id = idCasted;
-        return true;
-    }
-}
-
-file class GetPathByIdFunc<TModel, TKey>() : IGetPathByIdFunc
-    where TModel : class
-{
-    public Func<object?, string>? Value
-    {
-        get => _value is null ? null : (id) =>
-        {
-            if (id is not TKey idTyped)
-                throw new InvalidOperationException($"Id type mismatch. Expected {typeof(TKey)}, but got {id?.GetType()}.");
-
-            return _value.Invoke(idTyped);
-        };
-
-        set
-        {
-            if (value is null)
-            {
-                _value = null;
-                return;
-            }
-
-            _value = (id) => value.Invoke(id);
-        }
-    }
-
-    private Func<TKey?, string>? _value { get; set; }
 }

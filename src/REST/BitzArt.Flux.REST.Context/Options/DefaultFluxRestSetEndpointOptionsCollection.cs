@@ -8,7 +8,8 @@ internal class DefaultFluxRestSetEndpointOptionsCollection<TOptions, TModel>(Fun
 {
     public TOptions GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
     {
-        if (name is null) return _defaultUnnamedInstance ??= createNew.Invoke(setOptions);
+        if (name is null)
+            return _defaultUnnamedInstance ??= createNew.Invoke(setOptions);
 
         var found = _defaultNamedInstances.TryGetValue(name, out var instance);
         if (found) return instance!;

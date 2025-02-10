@@ -5,5 +5,4 @@ internal interface IFluxRestSetIdEndpointOptions<TModel, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
-    public IGetPathByIdFunc GetPathFunc { get; set; }
 }
