@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿ using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
@@ -8,17 +8,17 @@ namespace BitzArt.Flux;
 public static class AddSetExtension
 {
     /// <inheritdoc cref="AddSet{TModel,TKey}(IFluxRestServiceBuilder,string,string)"/>/>
-    public static IFluxRestSetBuilder<TModel, object> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
+    public static IFluxRestSetBuilder<TModel, object> AddSet<TModel>(this IFluxRestServiceBuilder serviceBuilder, string? path = null, string? name = null)
         where TModel : class
-        => AddSet<TModel, object>(serviceBuilder, endpoint, name);
+        => AddSet<TModel, object>(serviceBuilder, path, name);
 
     /// <summary>
     /// Adds a REST set to the <see cref="IFluxRestServiceBuilder"/>
     /// </summary>
-    public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, string? endpoint = null, string? name = null)
+    public static IFluxRestSetBuilder<TModel, TKey> AddSet<TModel, TKey>(this IFluxRestServiceBuilder serviceBuilder, string? path = null, string? name = null)
         where TModel : class
     {
-        var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder);
+        var builder = new FluxRestSetBuilder<TModel, TKey>(serviceBuilder, path);
 
         var services = serviceBuilder.Services;
         var serviceFactory = serviceBuilder.ServiceFactory;
@@ -36,8 +36,6 @@ public static class AddSetExtension
             var provider = x.GetRequiredService<IFluxFactory>();
             return provider.GetSetContext<TModel, TKey>(x, serviceFactory.ServiceName);
         });
-
-        if (endpoint is not null) return builder.WithEndpoint(endpoint);
 
         return builder;
     }

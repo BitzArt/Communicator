@@ -1,9 +1,12 @@
 ﻿namespace BitzArt.Flux.REST;
 
-internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpointCollection<TModel>
+internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<TModel> setOptions) 
+    : IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
     private readonly Dictionary<EndpointSignature, IFluxRestSetEndpointOptions<TModel>> _values = [];
+
+    public IFluxRestSetOptions<TModel> SetOptions { get; } = setOptions;
 
     public void Add<TInputParameters>(IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
         where TInputParameters : IRequestParameters?
@@ -66,17 +69,17 @@ internal class FluxRestSetEndpointCollection<TModel, TKey> : IFluxRestSetEndpoin
         return GetDefaultEndpointOptions<TInputParameters>(endpointType);
     }
 
-    private static FluxRestSetEndpointOptions<TModel, TKey, TInputParameters> GetDefaultEndpointOptions<TInputParameters>(EndpointType endpointType)
+    private FluxRestSetEndpointOptions<TModel, TKey, TInputParameters> GetDefaultEndpointOptions<TInputParameters>(EndpointType endpointType)
         where TInputParameters : IRequestParameters?
     {
         return endpointType switch
         {
-            EndpointType.Id => FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>.Instance,
-            EndpointType.Page => FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>.Instance,
-            EndpointType.Default => FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>.Instance,
+            EndpointType.Id => FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>.GetDefaultInstance(SetOptions),
+            EndpointType.Page => FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>.GetDefaultInstance(SetOptions),
+            EndpointType.Default => FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>.GetDefaultInstance(SetOptions),
             _ => throw new InvalidOperationException($"Unknown endpoint type '{endpointType}'."),
         };
     }
 
-    private record EndpointSignature(EndpointType EndpointType, Type? InputParametersType);
+    private record EndpointSignature(EndpointType EndpointType, Type InputParametersType);
 }

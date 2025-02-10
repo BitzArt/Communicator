@@ -1,15 +1,23 @@
 ﻿using BitzArt.Flux.REST;
+using BitzArt.Pagination;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace BitzArt.Flux;
 
 internal partial class RequestParameterParsingUtility
 {
-    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IRestRequestParameters? parameters = null)
+    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IRestRequestParameters? parameters, IRequestPreparationParameters preparationParameters)
     {
         var matches = ParameterRegex().Matches(path);
-        if (matches.Count == 0) return new RequestUrlParameterParsingResult(path, string.Empty);
+        if (matches.Count == 0)
+        {
+            if (preparationParameters.PageRequest is not null)
+                path = ApplyPaging(path, preparationParameters.PageRequest);
+
+            return new RequestUrlParameterParsingResult(path, string.Empty);
+        }
 
         if (parameters is null) throw new ParametersNotFoundException();
 
@@ -29,7 +37,30 @@ internal partial class RequestParameterParsingUtility
             logBuilder.Append($"{parameterName}: {value}");
         }
 
-        return new RequestUrlParameterParsingResult(resultBuilder.ToString(), logBuilder.ToString());
+        var result = resultBuilder.ToString();
+
+        if (preparationParameters.PageRequest is not null)
+            result = ApplyPaging(result, preparationParameters.PageRequest);
+
+        return new RequestUrlParameterParsingResult(result, logBuilder.ToString());
+    }
+
+    // TODO: review this
+    private static string ApplyPaging(string path, PageRequest pageRequest)
+    {
+        var queryIndex = path.IndexOf('?');
+
+        var query = queryIndex == -1 ?
+            HttpUtility.ParseQueryString(string.Empty) :
+            HttpUtility.ParseQueryString(path[queryIndex..]);
+
+        query.Add("offset", pageRequest.Offset?.ToString());
+        query.Add("limit", pageRequest.Limit?.ToString());
+
+        if (queryIndex != -1) path = path[..queryIndex];
+        path = path + "?" + query.ToString();
+
+        return path;
     }
 
     [GeneratedRegex("{(.*?)}")]

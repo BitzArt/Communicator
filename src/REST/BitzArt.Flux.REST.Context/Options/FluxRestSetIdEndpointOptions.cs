@@ -5,32 +5,54 @@ internal class FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
-    public IGetPathByIdFunc GetPathFunc { get; set; } = new GetPathByIdFunc<TModel, TKey>();
-
-    public static new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters> Instance => instance ?? new();
-
-    private static readonly FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>? instance;
+    public Func<TKey?, string>? GetPathFunc;
 
     public FluxRestSetIdEndpointOptions(
+        IFluxRestSetOptions<TModel> setOptions,
         string? path = null,
-        Func<TKey, string>? getPath = null,
+        Func<TKey?, string>? getPath = null,
         Func<TInputParameters?, IRestRequestParameters>? transformParameters = null)
-        : base(path, transformParameters)
+        : base(setOptions, path, transformParameters)
     {
         if (getPath is not null)
-            GetPathFunc.Value = getPath as Func<object?, string>;
+            GetPathFunc = (id) => getPath(id!);
     }
 
-    private protected override string GetPath(IRequestPreparationParameters parameters)
+    private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
+        = new((setOptions) => new FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters>(setOptions));
+
+    public new static FluxRestSetIdEndpointOptions<TModel, TKey, TInputParameters> GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
+        => _defaultOptions.GetDefaultInstance(setOptions, name);
+
+    private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {
-        var id = parameters.Id!;
+        var idValid = ValidateId(parameters, out var id);
 
-        if (GetPathFunc.Value is not null)
-            return GetPathFunc.Value(id);
+        if (GetPathFunc is not null)
+        {
+            return GetPathFunc(id);
+        }
 
-        return Path is not null 
-            ? System.IO.Path.Combine(Path, id.ToString()!) 
+        if (parameters.Id is null)
+            throw new Exception("");
+
+        return Path is not null
+            ? System.IO.Path.Combine(Path, id.ToString()!)
             : id.ToString()!;
+    }
+
+    private TKey? ValidateId(IRequestPreparationParameters parameters)
+    {
+        return null;
+
+        if (parameters.Id is null)
+            return true;
+
+        if (parameters.Id is not TKey idCasted)
+            return false;
+
+        id = idCasted;
+        return true;
     }
 }
 

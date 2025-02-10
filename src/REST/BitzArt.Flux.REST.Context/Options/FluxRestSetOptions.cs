@@ -3,9 +3,20 @@
 internal class FluxRestSetOptions<TModel, TKey> : IFluxRestSetOptions<TModel>
     where TModel : class
 {
-    public FluxRestSetEndpointCollection<TModel, TKey> EndpointCollection { get; } = new();
+    public FluxRestServiceOptions ServiceOptions { get; }
+
+    public FluxRestSetEndpointCollection<TModel, TKey> EndpointCollection { get; }
 
     IFluxRestSetEndpointCollection<TModel> IFluxRestSetOptions<TModel>.EndpointCollection => EndpointCollection;
 
     public Type? KeyType => typeof(TKey);
+
+    public string? Path { get; }
+
+    public FluxRestSetOptions(FluxRestServiceOptions serviceOptions, string? path)
+    {
+        ServiceOptions = serviceOptions;
+        EndpointCollection = new(this);
+        Path = path;
+    }
 }

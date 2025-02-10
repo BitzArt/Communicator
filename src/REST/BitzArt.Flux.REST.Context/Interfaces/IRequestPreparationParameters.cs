@@ -4,7 +4,7 @@ namespace BitzArt.Flux.REST;
 
 internal interface IRequestPreparationParameters
 {
-    EndpointType EndpointType { get; }
+    public EndpointType EndpointType { get; }
 
     public object? RequestParameters { get; }
 

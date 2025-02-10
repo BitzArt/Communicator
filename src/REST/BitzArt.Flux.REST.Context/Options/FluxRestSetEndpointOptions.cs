@@ -3,48 +3,65 @@ using System.Diagnostics;
 namespace BitzArt.Flux.REST;
 
 internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
-    string? path = null, 
-    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null) 
-    : IFluxRestSetEndpointOptions<TModel, TInputParameters>
+    IFluxRestSetOptions<TModel> setOptions,
+    string? path = null,
+    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null) : IFluxRestSetEndpointOptions<TModel, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
     /// <inheritdoc/>
     public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
 
+    public IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;
+
     /// <inheritdoc/>
     public string? Path { get; set; } = path;
 
-    public static FluxRestSetEndpointOptions<TModel, TKey, TInputParameters> Instance => instance ?? new();
+    private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
+        = new((setOptions) => new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions));
 
-    private static readonly FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>? instance;
+    public static FluxRestSetEndpointOptions<TModel, TKey, TInputParameters> GetDefaultInstance(IFluxRestSetOptions<TModel> setOptions, string? name = null)
+        => _defaultOptions.GetDefaultInstance(setOptions, name);
 
     public HttpRequestMessage PrepareRequest(IRequestPreparationParameters parameters)
     {
-        if (parameters.RequestParameters is not TInputParameters inputParameters)
-            throw new UnreachableException();
+        var path = BuildRequestPath(parameters);
+        var requestMessage = parameters.InitialCreateRequestMessageFunc(path);
 
-        var outputParameters = ProcessParameters(parameters, inputParameters);
-        var path = GetPath(parameters);
-        var parse = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
-
-        var requestMessage = parameters.InitialCreateRequestMessageFunc(parse.Result);
         return requestMessage;
     }
 
-    // TODO: implement method
-    private protected virtual string GetPath(IRequestPreparationParameters parameters)
+    private protected virtual string BuildRequestPath(IRequestPreparationParameters parameters)
     {
-        return Path ?? string.Empty;
+        return GetInitialPath();
+
+        var outputParameters = ProcessParameters(parameters);
+        var parse = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
     }
 
-    private IRestRequestParameters ProcessParameters(IRequestPreparationParameters parameters, TInputParameters inputParameters)
+    private string GetInitialPath()
+    {
+        return System.IO.Path.Combine(
+                    SetOptions.ServiceOptions.BaseUrl ?? string.Empty,
+                    SetOptions.Path ?? string.Empty,
+                    Path ?? string.Empty);
+    }
+
+    private IRestRequestParameters? ProcessParameters(IRequestPreparationParameters parameters)
     {
         if (TransformParametersFunc is not null)
-            return TransformParametersFunc.Invoke(inputParameters);
+        {
+            if (parameters.RequestParameters is not TInputParameters inputParameters)
+                throw new UnreachableException();
+
+            return TransformParametersFunc.Invoke(inputParameters); 
+        }
+
+        if (parameters.RequestParameters is null)
+            return null;
 
         if (parameters.RequestParameters is not IRestRequestParameters restRequestParameters)
-            throw new ArgumentException();
+            throw new ArgumentException(); // TODO: add exception message
 
         return restRequestParameters;
     }
