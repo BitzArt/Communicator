@@ -5,17 +5,18 @@ namespace BitzArt.Flux.REST;
 internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
-    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null) : IFluxRestSetEndpointOptions<TModel, TInputParameters>
+    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null) 
+    : IFluxRestSetEndpointOptions<TModel, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
 {
-    /// <inheritdoc/>
-    public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
-
     public IFluxRestSetOptions<TModel> SetOptions { get; set; } = setOptions;
 
     /// <inheritdoc/>
     public string? Path { get; set; } = path;
+
+    /// <inheritdoc/>
+    public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
 
     private static readonly DefaultFluxRestSetEndpointOptionsCollection<FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>, TModel> _defaultOptions
         = new((setOptions) => new FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions));
@@ -35,15 +36,12 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     {
         var path = GetInitialPath();
         var outputParameters = ProcessParameters(parameters);
-        var parse = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
-
-        return parse.Result;
+        
+        return RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
     }
 
     private protected virtual string GetInitialPath()
-    {
-        return CombinePath(SetOptions.ServiceOptions.BaseUrl, SetOptions.Path?.Trim('/'), Path?.Trim('/'));
-    }
+        => CombinePath(SetOptions.ServiceOptions.BaseUrl, SetOptions.Path?.Trim('/'), Path?.Trim('/'));
 
     private protected IRestRequestParameters? ProcessParameters(IRequestPreparationParameters parameters)
     {
@@ -64,6 +62,6 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
         return restRequestParameters;
     }
 
-    protected static string CombinePath(params string?[] segments)
-        => string.Join('/', segments.Where(x => !string.IsNullOrEmpty(x)));
+    private protected static string CombinePath(params string?[] segments)
+        => string.Join('/', segments.Where(x => !string.IsNullOrWhiteSpace(x)));
 }

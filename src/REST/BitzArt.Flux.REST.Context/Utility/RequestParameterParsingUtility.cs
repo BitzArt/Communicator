@@ -1,18 +1,14 @@
-﻿using BitzArt.Flux.REST;
-using BitzArt.Pagination;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace BitzArt.Flux;
 
 internal partial class RequestParameterParsingUtility
 {
-    public static RequestUrlParameterParsingResult ParseRequestUrl(string path, IRestRequestParameters? parameters)
+    public static string ParseRequestUrl(string path, IRestRequestParameters? parameters)
     {
         var matches = ParameterRegex().Matches(path);
-        if (matches.Count == 0)
-            return new RequestUrlParameterParsingResult(path, string.Empty);
+        if (matches.Count == 0) return string.Empty;
 
         if (parameters is null) throw new ParametersNotFoundException();
 
@@ -32,7 +28,7 @@ internal partial class RequestParameterParsingUtility
             logBuilder.Append($"{parameterName}: {value}");
         }
 
-        return new RequestUrlParameterParsingResult(resultBuilder.ToString(), logBuilder.ToString());
+        return resultBuilder.ToString();
     }
 
     [GeneratedRegex("{(.*?)}")]
