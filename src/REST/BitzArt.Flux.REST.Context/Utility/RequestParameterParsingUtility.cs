@@ -8,7 +8,7 @@ internal partial class RequestParameterParsingUtility
     public static string ParseRequestUrl(string path, IRestRequestParameters? parameters)
     {
         var matches = ParameterRegex().Matches(path);
-        if (matches.Count == 0) return string.Empty;
+        if (matches.Count == 0) return path;
 
         if (parameters is null) throw new ParametersNotFoundException();
 

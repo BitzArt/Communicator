@@ -14,30 +14,33 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
     private protected override string BuildRequestPath(IRequestPreparationParameters parameters)
     {
         if (parameters.PageRequest is null)
-            throw new Exception(); // TODO: add message
+            throw new ArgumentNullException(); // TODO: add message
 
         var path = GetInitialPath();
-        path = ApplyPageParameters(path, parameters.PageRequest);
+        path = ApplyPaginationParameters(path, parameters.PageRequest);
 
         var outputParameters = ProcessParameters(parameters);
         
         return RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
     }
 
-    private static string ApplyPageParameters(string path, PageRequest pageRequest)
+    private static string ApplyPaginationParameters(string path, PageRequest pageRequest)
     {
         var queryIndex = path.IndexOf('?');
+        var basePath = queryIndex == -1 ? path : path[..queryIndex];
 
         var query = queryIndex == -1 ?
             HttpUtility.ParseQueryString(string.Empty) :
             HttpUtility.ParseQueryString(path[queryIndex..]);
 
-        query.Add("offset", pageRequest.Offset?.ToString());
-        query.Add("limit", pageRequest.Limit?.ToString());
+        if (pageRequest.Offset.HasValue)
+            query["offset"] = pageRequest.Offset.Value.ToString();
 
-        if (queryIndex != -1) path = path[..queryIndex];
-        path = path + "?" + query.ToString();
+        if (pageRequest.Limit.HasValue)
+            query["limit"] = pageRequest.Limit.Value.ToString();
 
-        return path;
+        return query.Count > 0 
+            ? $"{basePath}?{query}" 
+            : basePath;
     }
 }

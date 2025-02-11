@@ -18,8 +18,6 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     /// <inheritdoc/>
     public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; set; } = transformParametersFunc;
 
-    
-
     public HttpRequestMessage PrepareRequest(IRequestPreparationParameters parameters)
     {
         var path = BuildRequestPath(parameters);
@@ -38,7 +36,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     }
 
     private protected virtual string GetInitialPath()
-        => CombinePath(SetOptions.ServiceOptions.BaseUrl?.Trim('/'), SetOptions.Path?.Trim('/'), Path?.Trim('/'));
+        => CombinePath(SetOptions.ServiceOptions.BaseUrl, SetOptions.Path, Path);
 
     private protected IRestRequestParameters? ProcessParameters(IRequestPreparationParameters parameters)
     {
@@ -60,5 +58,5 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     }
 
     private protected static string CombinePath(params string?[] segments)
-        => string.Join('/', segments.Where(x => !string.IsNullOrWhiteSpace(x)));
+        => string.Join('/', segments.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x!.Trim('/')));
 }

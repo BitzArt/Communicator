@@ -11,6 +11,7 @@ internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPr
 
     object? IRequestPreparationParameters.RequestParameters => RequestParameters;
 
+    // TODO: handle non-nullable types
     public TKey? Id { get; set; }
 
     object? IRequestPreparationParameters.Id => Id;
@@ -20,13 +21,31 @@ internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPr
     public Func<string, HttpRequestMessage> InitialCreateRequestMessageFunc { get; set; }
 
     public RequestPreparationParameters(
+        EndpointType endpointType,
+        TKey id,
+        Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
+        : this(endpointType, initialCreateRequestMessageFunc)
+    {
+        Id = id;
+    }
+
+    public RequestPreparationParameters(
         EndpointType endpointType, 
-        TKey? id, 
+        TKey id, 
         TInputParameters? requestParameters, 
         Func<string, HttpRequestMessage> initialCreateRequestMessageFunc) 
         : this(endpointType, requestParameters, initialCreateRequestMessageFunc)
     {
         Id = id;
+    }
+
+    public RequestPreparationParameters(
+        EndpointType endpointType,
+        PageRequest? pageRequest,
+        Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
+        : this(endpointType, initialCreateRequestMessageFunc)
+    {
+        PageRequest = pageRequest;
     }
 
     public RequestPreparationParameters(
@@ -40,12 +59,19 @@ internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPr
     }
 
     public RequestPreparationParameters(
-    EndpointType endpointType,
-    TInputParameters? requestParameters,
-    Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
+        EndpointType endpointType,
+        TInputParameters? requestParameters,
+        Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
+        : this(endpointType, initialCreateRequestMessageFunc)
+    {
+        RequestParameters = requestParameters;
+    }
+
+    public RequestPreparationParameters(
+        EndpointType endpointType,
+        Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
     {
         EndpointType = endpointType;
-        RequestParameters = requestParameters;
         InitialCreateRequestMessageFunc = initialCreateRequestMessageFunc;
     }
 }
