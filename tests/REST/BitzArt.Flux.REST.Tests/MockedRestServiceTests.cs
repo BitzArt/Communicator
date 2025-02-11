@@ -421,13 +421,10 @@ public class MockedRestServiceTests
 
         var model = new TestModel { Id = modelId, Name = name };
 
-        var parameters = new RestRequestParameters()
-        {
-            { "id", modelId }
-        };
+
 
         // Act
-        var result = await setContext.UpdateAsync(model, parameters, partial: false);
+        var result = await setContext.UpdateAsync(model, new() { "id", modelId }, partial: false);
 
         // Assert
         Assert.NotNull(result);

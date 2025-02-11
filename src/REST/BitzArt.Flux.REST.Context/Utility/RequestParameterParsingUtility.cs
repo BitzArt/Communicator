@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace BitzArt.Flux;
 
+// TODO: Move this logic into endpoint options
 internal partial class RequestParameterParsingUtility
 {
     public static string ParseRequestUrl(string path, IRestRequestParameters? parameters)
@@ -22,6 +23,7 @@ internal partial class RequestParameterParsingUtility
 
             if (!found) throw new ParameterNotFoundException(parameterName);
 
+            // TODO: Build result from pieces instead of replacing parts
             resultBuilder.Replace(match.Value, value!.ToString());
 
             if (logBuilder.Length > 1) logBuilder.Append("; ");

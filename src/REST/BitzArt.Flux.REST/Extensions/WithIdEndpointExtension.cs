@@ -45,7 +45,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, string> getEndpoint)
+        Func<TKey, string> getEndpoint)
         where TModel : class
         => builder.WithIdEndpoint<TModel, TKey, RestRequestParameters?>(getEndpoint);
 
@@ -57,7 +57,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, string> getEndpoint)
+        Func<TKey, string> getEndpoint)
         where TModel : class
         where TParameters : IRequestParameters?
     {
@@ -136,7 +136,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, string> getEndpoint,
+        Func<TKey, string> getEndpoint,
         Func<RequestParameters?, RestRequestParameters> transformParameters)
         where TModel : class
         => builder.WithIdEndpoint<TModel, TKey, RequestParameters?, RestRequestParameters>(getEndpoint, transformParameters);
@@ -149,7 +149,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TInputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, string> getEndpoint,
+        Func<TKey, string> getEndpoint,
         Func<TInputParameters?, RestRequestParameters> transformParameters)
         where TModel : class
         where TInputParameters : IRequestParameters?
@@ -163,7 +163,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, string> getEndpoint,
+        Func<TKey, string> getEndpoint,
         Func<RequestParameters?, TOutputParameters> transformParameters)
         where TModel : class
         where TOutputParameters : IRestRequestParameters
@@ -177,7 +177,7 @@ public static class WithIdEndpointExtension
     /// </returns>
     public static IFluxRestSetBuilder<TModel, TKey> WithIdEndpoint<TModel, TKey, TInputParameters, TOutputParameters>(
         this IFluxRestSetBuilder<TModel, TKey> builder,
-        Func<TKey?, string> getEndpoint,
+        Func<TKey, string> getEndpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
         where TModel : class
         where TInputParameters : IRequestParameters?

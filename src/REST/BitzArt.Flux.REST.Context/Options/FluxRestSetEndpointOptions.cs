@@ -29,7 +29,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     private protected virtual string BuildRequestPath(IRequestPreparationParameters parameters)
     {
         var path = GetInitialPath();
-        var outputParameters = ProcessParameters(parameters);
+        var outputParameters = HandleInputParameters(parameters);
         
         var result = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
         return result;
@@ -38,7 +38,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     private protected virtual string GetInitialPath()
         => CombinePath(SetOptions.ServiceOptions.BaseUrl, SetOptions.Path, Path);
 
-    private protected IRestRequestParameters? ProcessParameters(IRequestPreparationParameters parameters)
+    private protected IRestRequestParameters? HandleInputParameters(IRequestPreparationParameters parameters)
     {
         if (TransformParametersFunc is not null)
         {
@@ -57,6 +57,8 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
         return restRequestParameters;
     }
 
+    // TODO: Explicitly specify segments (service base url, set path, endpoint path, id (optional)).
+    // Handle leading slash in set path and endpoint path. Leading slash means absolute path relative to domain root.
     private protected static string CombinePath(params string?[] segments)
-        => string.Join('/', segments.Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x!.Trim('/')));
+        => string.Join('/', segments.Where(x => !string.IsNullOrEmpty(x)).Select(x => x!.TrimEnd('/')));
 }

@@ -10,7 +10,7 @@ internal partial class FluxRestSetContext<TModel, TKey> : FluxSetContext<TModel,
     {
         var jsonString = JsonSerializer.Serialize(model, ServiceOptions.SerializerOptions);
 
-        var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Default, null, (path) =>
+        var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Default, (path) =>
             new HttpRequestMessage(HttpMethod.Post, path)
             {
                 Content = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json)

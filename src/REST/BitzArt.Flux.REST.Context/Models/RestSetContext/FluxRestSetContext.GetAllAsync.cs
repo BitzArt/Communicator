@@ -4,7 +4,7 @@ internal partial class FluxRestSetContext<TModel, TKey>
 {
     public override async Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Default, null, (path) => 
+        var preparationParameters = new RequestPreparationParameters<RestRequestParameters, TKey>(EndpointType.Default, (path) => 
             new HttpRequestMessage(HttpMethod.Get, path));
 
         var requestMessage = SetOptions.EndpointCollection.Resolve<RestRequestParameters>(preparationParameters);

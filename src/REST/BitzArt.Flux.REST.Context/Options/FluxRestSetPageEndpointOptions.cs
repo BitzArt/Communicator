@@ -19,7 +19,7 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
         var path = GetInitialPath();
         path = ApplyPaginationParameters(path, parameters.PageRequest);
 
-        var outputParameters = ProcessParameters(parameters);
+        var outputParameters = HandleInputParameters(parameters);
         
         return RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
     }
