@@ -4,7 +4,7 @@ namespace BitzArt.Flux;
 
 public class FromJsonExtensionTests
 {
-    private string jsonData =
+    private readonly string jsonData =
         """
         [
             {

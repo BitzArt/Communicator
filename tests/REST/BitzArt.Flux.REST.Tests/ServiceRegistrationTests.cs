@@ -12,24 +12,36 @@ file class TestModel
 public class ServiceRegistrationTests
 {
     [Fact]
-    public void UsingRest_WithModel_AddsFactoryAndSetContext()
+    public void AddFlux_Empty_ShouldAddFluxFactory()
     {
         var services = new ServiceCollection();
 
-        var serviceName = "SomeExternalService";
-
-        services.AddFlux(flux =>
-        {
-            flux.AddService(serviceName)
-            .UsingRest("http://localhost")
-            .AddSet<TestModel, int>("test");
-        });
+        services.AddFlux(flux => { });
 
         var serviceProvider = services.BuildServiceProvider();
 
         var factory = serviceProvider.GetRequiredService<IFluxFactory>();
         Assert.NotNull(factory);
-        Assert.True(factory.ServiceContexts.Count > 0);
+        Assert.Empty(factory.ServiceContexts);
+    }
+
+    [Fact]
+    public void UsingRest_OnServicePrebuilder_ShouldAddAndConfigureRestServiceContext()
+    {
+        var services = new ServiceCollection();
+
+        // Doesn't matter, but every service requires a name
+        var serviceName = "SomeExternalService";
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService(serviceName)
+                .UsingRest("http://localhost");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var factory = serviceProvider.GetRequiredService<IFluxFactory>();
 
         Assert.Single(factory.ServiceContexts);
         var provider = factory.ServiceContexts.Single();
@@ -38,10 +50,38 @@ public class ServiceRegistrationTests
 
         var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel, int>>();
         Assert.NotNull(setContext);
+
+        Assert.IsType<FluxRestSetContext<TestModel, int>>(setContext);
     }
 
     [Fact]
-    public void UsingRest_ConfigureHttpClient_ConfiguresHttpClient()
+    public void AddSet_Basic_ShouldAddAndConfigureSetContext()
+    {
+        var services = new ServiceCollection();
+
+        // Doesn't matter, but every service requires a name
+        var serviceName = "SomeExternalService";
+
+        services.AddFlux(flux =>
+        {
+            flux.AddService(serviceName)
+                .UsingRest("http://localhost")
+                    .AddSet<TestModel, int>("test");
+        });
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var factory = serviceProvider.GetRequiredService<IFluxFactory>();
+        var provider = factory.ServiceContexts.Single();
+
+        var setContext = serviceProvider.GetRequiredService<IFluxSetContext<TestModel, int>>();
+        Assert.NotNull(setContext);
+
+        Assert.IsType<FluxRestSetContext<TestModel, int>>(setContext);
+    }
+
+    [Fact]
+    public void ConfigureHttpClient_WithAction_ShouldPerformActionAndConfigureHttpClient()
     {
         var services = new ServiceCollection();
 
@@ -70,7 +110,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void UsingRest_WithJsonOptions_ConfiguresJson()
+    public void ConfigureJson_WithAction_ShouldPerformActionAndConfigureJsonSerializer()
     {
         var services = new ServiceCollection();
 
@@ -104,24 +144,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void UsingRest_WithService_AddsServiceContext()
-    {
-        var services = new ServiceCollection();
-
-        services.AddFlux(flux =>
-        {
-            flux.AddService("Service1")
-            .UsingRest("http://localhost")
-            .AddSet<TestModel>("test-model");
-        });
-
-        var serviceProvider = services.BuildServiceProvider();
-
-        var flux = serviceProvider.GetRequiredService<IFluxContext>();
-    }
-
-    [Fact]
-    public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
+    public void ResolveAllDescendantsOfFluxContext_AfterAddFlux_ShouldResolveAll()
     {
         var services = new ServiceCollection();
         services.AddFlux(flux =>
@@ -152,7 +175,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
+    public void ResolveServiceContextsFromDiContainer_AfterAddFluxWith2Services_ShouldResolve()
     {
         var services = new ServiceCollection();
         services.AddFlux(flux =>
@@ -172,10 +195,13 @@ public class ServiceRegistrationTests
         Assert.NotNull(serviceContexts);
         Assert.True(serviceContexts.Any());
         Assert.Equal(2, serviceContexts.Count());
+
+        Assert.Contains(serviceContexts, x => x is FluxServiceContext sc && sc.Provider.ServiceName == "service1");
+        Assert.Contains(serviceContexts, x => x is FluxServiceContext sc && sc.Provider.ServiceName == "service2");
     }
 
     [Fact]
-    public void AddSet_TwoSetsSameModelDifferentNames_Configures()
+    public void AddSet_WithTwoSetsHavingSameModelAndDifferentNames_ShouldAddAndConfigureSets()
     {
         var services = new ServiceCollection();
 
@@ -220,7 +246,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddSet_SameModelTwiceNoName_Throws()
+    public void AddSet_WithSameModelTwiceButNoName_ShouldThrow()
     {
         var services = new ServiceCollection();
 
