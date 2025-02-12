@@ -8,8 +8,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="BitzArt.Pagination" Version="1.15.1" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+	  <PackageReference Include="BitzArt.Pagination" Version="1.16.1" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>

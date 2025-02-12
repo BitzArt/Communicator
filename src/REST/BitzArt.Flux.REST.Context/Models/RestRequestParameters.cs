@@ -6,7 +6,7 @@ public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValu
 {
     public Dictionary<string, object> ValueMap => GetDictionary.Invoke();
 
-    private readonly Dictionary<string, object> _parameters = []; 
+    private readonly Dictionary<string, object> _parameters = [];
 
     ICollection IRequestParameters.Values => ValueMap;
 
@@ -28,8 +28,8 @@ public class RestRequestParameters : IRestRequestParameters, ICollection<KeyValu
     }
 
     // TODO: GetUrlParameters
-    protected virtual Func<Dictionary<string, object>> GetDictionary => () => 
-    { 
+    protected virtual Func<Dictionary<string, object>> GetDictionary => () =>
+    {
         if (GetParameters is null) return _parameters;
 
         var collection = GetParameters.Invoke();

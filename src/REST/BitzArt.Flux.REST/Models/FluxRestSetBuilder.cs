@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BitzArt.Flux;
 
-internal class FluxRestSetBuilder<TModel>(IFluxRestServiceBuilder serviceBuilder, string? path) 
+internal class FluxRestSetBuilder<TModel>(IFluxRestServiceBuilder serviceBuilder, string? path)
     : FluxRestSetBuilder<TModel, object>(serviceBuilder, path)
     where TModel : class
 {

@@ -5,7 +5,7 @@ namespace BitzArt.Flux.REST;
 internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
     string? path = null,
-    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null) 
+    Func<TInputParameters?, IRestRequestParameters>? transformParametersFunc = null)
     : IFluxRestSetEndpointOptions<TModel, TInputParameters>
     where TModel : class
     where TInputParameters : IRequestParameters?
@@ -30,7 +30,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
     {
         var path = GetInitialPath();
         var outputParameters = HandleInputParameters(parameters);
-        
+
         var result = RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
         return result;
     }
@@ -45,7 +45,7 @@ internal class FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(
             if (parameters.RequestParameters is not TInputParameters inputParameters)
                 throw new UnreachableException();
 
-            return TransformParametersFunc.Invoke(inputParameters); 
+            return TransformParametersFunc.Invoke(inputParameters);
         }
 
         if (parameters.RequestParameters is null)

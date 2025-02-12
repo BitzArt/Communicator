@@ -24,8 +24,8 @@ internal partial class FluxRestSetContext<TModel, TKey>(
         try
         {
             var response = await HttpClient.SendAsync(message, cancellationToken);
-            
-            if (!response.IsSuccessStatusCode) 
+
+            if (!response.IsSuccessStatusCode)
                 throw new FluxRestNonSuccessStatusCodeException(response);
 
             var content = await response.Content.ReadAsStringAsync(cancellationToken);

@@ -1,6 +1,4 @@
-﻿using BitzArt.Pagination;
-
-namespace BitzArt.Flux.REST;
+﻿namespace BitzArt.Flux.REST;
 
 /// <summary>
 /// Represents a collection of endpoint options for a set of endpoints.<br/>

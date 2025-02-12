@@ -1,6 +1,6 @@
 ﻿namespace BitzArt.Flux.REST;
 
-internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<TModel> setOptions) 
+internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<TModel> setOptions)
     : IFluxRestSetEndpointCollection<TModel>
     where TModel : class
 {
@@ -30,7 +30,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
     }
 
     private void Add<TInputParameters>(EndpointType endpointType, IFluxRestSetEndpointOptions<TModel, TInputParameters> endpointOptions)
-        where TInputParameters: IRequestParameters?
+        where TInputParameters : IRequestParameters?
     {
         var inputParametersType = typeof(TInputParameters);
         var signature = new EndpointSignature(endpointType, inputParametersType);
@@ -73,7 +73,7 @@ internal class FluxRestSetEndpointCollection<TModel, TKey>(IFluxRestSetOptions<T
 
         return _defaultOptions.GetDefaultInstance<TInputParameters>(SetOptions, endpointType);
     }
-    
+
     // TODO: When implementing 'Named endpoints' functionality: add endpoint name,
     // figure out resolve logic when enpoint name provided/not provided
     private record EndpointSignature(EndpointType EndpointType, Type InputParametersType);

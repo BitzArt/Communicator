@@ -8,7 +8,7 @@ internal interface IRequestPreparationParameters
 
     public object? RequestParameters { get; }
 
-    public object? Id { get;}
+    public object? Id { get; }
 
     public PageRequest? PageRequest { get; }
 

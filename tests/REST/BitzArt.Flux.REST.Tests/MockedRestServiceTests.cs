@@ -37,44 +37,44 @@ public class MockedRestServiceTests
         Assert.True(result.Count() == setCount);
     }
 
-    //[Fact]
-    //public async Task GetAllAsync_WithParameters_ReturnsAll()
-    //{
-    //    // Arrange
-    //    var baseUrl = "https://mocked.service";
-    //    var setCount = 10;
+    [Fact]
+    public async Task GetAllAsync_WithParameters_ReturnsAll()
+    {
+        // Arrange
+        var baseUrl = "https://mocked.service";
+        var setCount = 10;
 
-    //    var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
-    //    {
-    //        x.When($"{baseUrl.TrimEnd('/')}/model?sort=id")
-    //        .Respond(HttpStatusCode.OK,
-    //        JsonContent.Create(TestModel.GetAll(setCount)));
-    //    });
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model?sort=id")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(TestModel.GetAll(setCount)));
+        });
 
-    //    ((FluxRestSetContext<TestModel, int>)setContext)
-    //        .SetOptions.EndpointOptions.Path = "model?sort={sort}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.EndpointOptions.Path = "model?sort={sort}";
 
-    //    ((FluxRestSetContext<TestModel, int>)setContext)
-    //        .SetOptions.EndpointOptions.ParametersType = typeof(RequestParameters);
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.EndpointOptions.ParametersType = typeof(RequestParameters);
 
-    //    ((FluxRestSetContext<TestModel, int>)setContext)
-    //        .SetOptions.EndpointOptions.TransformRequestParametersFunc = (x) =>
-    //        {
-    //            return new RestRequestParameters()
-    //            {
-    //                { "sort", ((RequestParameters)x).Parameters.First()! }
-    //            };
-    //        };
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.EndpointOptions.TransformRequestParametersFunc = (x) =>
+            {
+                return new RestRequestParameters()
+                {
+                    { "sort", ((RequestParameters)x).Parameters.First()! }
+                };
+            };
 
-    //    // Act
-    //    var parameters = new RequestParameters("id");
-    //    var result = await setContext.GetAllAsync(parameters);
+        // Act
+        var parameters = new RequestParameters("id");
+        var result = await setContext.GetAllAsync(parameters);
 
-    //    // Assert
-    //    Assert.NotNull(result);
-    //    if (setCount > 0) Assert.True(result.Any());
-    //    Assert.True(result.Count() == setCount);
-    //}
+        // Assert
+        Assert.NotNull(result);
+        if (setCount > 0) Assert.True(result.Any());
+        Assert.True(result.Count() == setCount);
+    }
 
     [Theory]
     [InlineData(0, 0, 0)]
@@ -156,7 +156,7 @@ public class MockedRestServiceTests
         var modelCount = 1;
         var id = 1;
 
-        var setContext = 
+        var setContext =
             TestSetContext.GetTestSetContext(baseUrl, x =>
             {
                 x.When($"{baseUrl.TrimEnd('/')}/model/{id}/specific")
@@ -177,43 +177,43 @@ public class MockedRestServiceTests
         Assert.Equal(1, result.Id);
     }
 
-    //[Fact]
-    //public async Task GetAsyncWithParameters_MockedHttpClient_Returns()
-    //{
-    //    var baseUrl = "https://mocked.service";
-    //    var id = 1;
+    [Fact]
+    public async Task GetAsyncWithParameters_MockedHttpClient_Returns()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
 
-    //    var database = TestModel.GetAll(100);
-    //    var changedName = "Changed Name";
-    //    var defaultModel = database.First(x => x.Id == id);
-    //    var defaultName = defaultModel.Name;
-    //    var changedModel = new TestModel() { Id = id, Name = changedName };
+        var database = TestModel.GetAll(100);
+        var changedName = "Changed Name";
+        var defaultModel = database.First(x => x.Id == id);
+        var defaultName = defaultModel.Name;
+        var changedModel = new TestModel() { Id = id, Name = changedName };
 
-    //    var setContext = (FluxRestSetContext<TestModel, int>)
-    //        TestSetContext.GetTestSetContext(baseUrl, x =>
-    //    {
-    //        x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=False")
-    //        .Respond(HttpStatusCode.OK,
-    //        JsonContent.Create(defaultModel));
+        var setContext = (FluxRestSetContext<TestModel, int>)
+            TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=False")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(defaultModel));
 
-    //        x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=True")
-    //        .Respond(HttpStatusCode.OK,
-    //        JsonContent.Create(changedModel));
-    //    });
+            x.When($"{baseUrl.TrimEnd('/')}/model/{id}?changeName=True")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(changedModel));
+        });
 
-    //    setContext.SetOptions.IdEndpointOptions.GetPathFunc = (id, parameters) =>
-    //    {
-    //        return $"model/{id}?changeName={parameters!.First()}";
-    //    };
+        setContext.SetOptions.IdEndpointOptions.GetPathFunc = (id, parameters) =>
+        {
+            return $"model/{id}?changeName={parameters!.First()}";
+        };
 
-    //    var parameters = new FluxRequestParameters(false);
-    //    var resultWithParameterFalse = await setContext.GetAsync(id, parameters);
-    //    Assert.Equal(defaultName, resultWithParameterFalse.Name);
+        var parameters = new FluxRequestParameters(false);
+        var resultWithParameterFalse = await setContext.GetAsync(id, parameters);
+        Assert.Equal(defaultName, resultWithParameterFalse.Name);
 
-    //    parameters = new FluxRequestParameters(true);
-    //    var resultWithParameterTrue = await setContext.GetAsync(id, parameters);
-    //    Assert.Equal(changedName, resultWithParameterTrue.Name);
-    //}
+        parameters = new FluxRequestParameters(true);
+        var resultWithParameterTrue = await setContext.GetAsync(id, parameters);
+        Assert.Equal(changedName, resultWithParameterTrue.Name);
+    }
 
     [Fact]
     public async Task GetPageAsyncWithParameters_MockedHttpClient_Returns()
@@ -432,82 +432,82 @@ public class MockedRestServiceTests
         Assert.Equal(name, result.Name);
     }
 
-    //[Fact]
-    //public async Task UpdateAsync_CustomIdEndpointLogic_ReturnsModel()
-    //{
-    //    var baseUrl = "https://mocked.service";
-    //    var id = 1;
-    //    var name = "updated model";
+    [Fact]
+    public async Task UpdateAsync_CustomIdEndpointLogic_ReturnsModel()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model";
 
-    //    var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
-    //    {
-    //        x.When($"{baseUrl.TrimEnd('/')}/model/specific/{id}")
-    //        .Respond(HttpStatusCode.OK,
-    //        JsonContent.Create(new TestModel { Id = id, Name = name }));
-    //    });
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/specific/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModel { Id = id, Name = name }));
+        });
 
-    //    ((FluxRestSetContext<TestModel, int>)setContext)
-    //        .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
 
-    //    var model = new TestModel { Id = id, Name = name };
+        var model = new TestModel { Id = id, Name = name };
 
-    //    var result = await setContext.UpdateAsync(id, model);
+        var result = await setContext.UpdateAsync(id, model);
 
-    //    Assert.NotNull(result);
-    //    Assert.Equal(id, result.Id);
-    //    Assert.Equal(name, result.Name);
-    //}
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
 
-    //[Fact]
-    //public async Task UpdateAsyncWithResponseType_IdAsParameter_ReturnsUpdateResponse()
-    //{
-    //    var baseUrl = "https://mocked.service";
-    //    var modelId = 1;
-    //    var name = "updated model";
+    [Fact]
+    public async Task UpdateAsyncWithResponseType_IdAsParameter_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var modelId = 1;
+        var name = "updated model";
 
-    //    var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
-    //    {
-    //        x.When($"{baseUrl.TrimEnd('/')}/model?id={modelId}")
-    //        .Respond(HttpStatusCode.OK,
-    //        JsonContent.Create(new TestModelUpdateResponse { Id = modelId, Name = name }));
-    //    });
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model?id={modelId}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModelUpdateResponse { Id = modelId, Name = name }));
+        });
 
-    //    ((FluxRestSetContext<TestModel, int>)setContext)
-    //        .SetOptions.IdEndpointOptions.GetPathFunc = (_, parameters) => $"model?id={parameters!.First()}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (_, parameters) => $"model?id={parameters!.First()}";
 
-    //    var model = new TestModel { Id = modelId, Name = name };
+        var model = new TestModel { Id = modelId, Name = name };
 
-    //    var parameters = new FluxRequestParameters(modelId);
-    //    var result = await setContext.UpdateAsync<TestModelUpdateResponse>(model, parameters, partial: false);
+        var parameters = new FluxRequestParameters(modelId);
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(model, parameters, partial: false);
 
-    //    Assert.NotNull(result);
-    //    Assert.Equal(modelId, result.Id);
-    //    Assert.Equal(name, result.Name);
-    //}
+        Assert.NotNull(result);
+        Assert.Equal(modelId, result.Id);
+        Assert.Equal(name, result.Name);
+    }
 
-    //[Fact]
-    //public async Task UpdateAsyncWithResponseType_CustomIdEndpointLogic_ReturnsUpdateResponse()
-    //{
-    //    var baseUrl = "https://mocked.service";
-    //    var id = 1;
-    //    var name = "updated model";
+    [Fact]
+    public async Task UpdateAsyncWithResponseType_CustomIdEndpointLogic_ReturnsUpdateResponse()
+    {
+        var baseUrl = "https://mocked.service";
+        var id = 1;
+        var name = "updated model";
 
-    //    var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
-    //    {
-    //        x.When($"{baseUrl.TrimEnd('/')}/model/specific/{id}")
-    //        .Respond(HttpStatusCode.OK,
-    //        JsonContent.Create(new TestModelUpdateResponse { Id = id, Name = name }));
-    //    });
+        var setContext = TestSetContext.GetTestSetContext(baseUrl, x =>
+        {
+            x.When($"{baseUrl.TrimEnd('/')}/model/specific/{id}")
+            .Respond(HttpStatusCode.OK,
+            JsonContent.Create(new TestModelUpdateResponse { Id = id, Name = name }));
+        });
 
-    //    ((FluxRestSetContext<TestModel, int>)setContext)
-    //        .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
+        ((FluxRestSetContext<TestModel, int>)setContext)
+            .SetOptions.IdEndpointOptions.GetPathFunc = (key, _) => $"model/specific/{key}";
 
-    //    var model = new TestModel { Id = id, Name = name };
+        var model = new TestModel { Id = id, Name = name };
 
-    //    var result = await setContext.UpdateAsync<TestModelUpdateResponse>(id, model);
+        var result = await setContext.UpdateAsync<TestModelUpdateResponse>(id, model);
 
-    //    Assert.NotNull(result);
-    //    Assert.Equal(id, result.Id);
-    //    Assert.Equal(name, result.Name);
-    //}
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.Equal(name, result.Name);
+    }
 }

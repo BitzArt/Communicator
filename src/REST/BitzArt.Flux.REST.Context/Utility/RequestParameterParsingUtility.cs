@@ -36,7 +36,7 @@ internal partial class RequestParameterParsingUtility
     [GeneratedRegex("{(.*?)}")]
     private static partial Regex ParameterRegex();
 
-    private class ParametersNotFoundException() 
+    private class ParametersNotFoundException()
         : Exception("Parameters are specified in endpoint configuration but not found in the request.")
     {
     }
@@ -44,5 +44,5 @@ internal partial class RequestParameterParsingUtility
     private class ParameterNotFoundException(string parameterName)
         : Exception($"Parameter '{parameterName}' is specified in endpoint configuration but not found in the request.")
     {
-    } 
+    }
 }

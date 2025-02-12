@@ -30,10 +30,10 @@ internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPr
     }
 
     public RequestPreparationParameters(
-        EndpointType endpointType, 
-        TKey id, 
-        TInputParameters? requestParameters, 
-        Func<string, HttpRequestMessage> initialCreateRequestMessageFunc) 
+        EndpointType endpointType,
+        TKey id,
+        TInputParameters? requestParameters,
+        Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
         : this(endpointType, requestParameters, initialCreateRequestMessageFunc)
     {
         Id = id;
@@ -49,9 +49,9 @@ internal class RequestPreparationParameters<TInputParameters, TKey> : IRequestPr
     }
 
     public RequestPreparationParameters(
-        EndpointType endpointType, 
-        PageRequest? pageRequest, 
-        TInputParameters? requestParameters, 
+        EndpointType endpointType,
+        PageRequest? pageRequest,
+        TInputParameters? requestParameters,
         Func<string, HttpRequestMessage> initialCreateRequestMessageFunc)
         : this(endpointType, requestParameters, initialCreateRequestMessageFunc)
     {

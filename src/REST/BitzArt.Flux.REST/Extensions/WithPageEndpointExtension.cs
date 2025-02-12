@@ -89,7 +89,7 @@ public static class WithPageEndpointExtension
         string endpoint,
         Func<TInputParameters?, TOutputParameters> transformParameters)
         where TModel : class
-        where TInputParameters: IRequestParameters?
+        where TInputParameters : IRequestParameters?
         where TOutputParameters : IRestRequestParameters
     {
         var options = new FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(builder.SetOptions, endpoint, (parameters) => transformParameters(parameters));

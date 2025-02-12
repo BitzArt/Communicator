@@ -5,7 +5,7 @@ namespace BitzArt.Flux.REST;
 
 internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
     IFluxRestSetOptions<TModel> setOptions,
-    string? path = null, 
+    string? path = null,
     Func<TInputParameters?, IRestRequestParameters>? transformParameters = null)
     : FluxRestSetEndpointOptions<TModel, TKey, TInputParameters>(setOptions, path, transformParameters), IFluxRestSetPageEndpointOptions<TModel, TInputParameters>
     where TModel : class
@@ -20,7 +20,7 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
         path = ApplyPaginationParameters(path, parameters.PageRequest);
 
         var outputParameters = HandleInputParameters(parameters);
-        
+
         return RequestParameterParsingUtility.ParseRequestUrl(path, outputParameters);
     }
 
@@ -39,8 +39,8 @@ internal class FluxRestSetPageEndpointOptions<TModel, TKey, TInputParameters>(
         if (pageRequest.Limit.HasValue)
             query["limit"] = pageRequest.Limit.Value.ToString();
 
-        return query.Count > 0 
-            ? $"{basePath}?{query}" 
+        return query.Count > 0
+            ? $"{basePath}?{query}"
             : basePath;
     }
 }
