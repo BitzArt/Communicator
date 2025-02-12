@@ -186,7 +186,7 @@ internal class FluxSetDataProvider<TModel>(ILoggerFactory loggerFactory) : IFlux
             _logger.LogDebug("Processing reset for {Model} data provider.", typeof(TModel).Name);
         }
 
-        if (CompareWithLastRequest(state, parameters)) 
+        if (CompareWithLastRequest(state, parameters))
             return LastQuery!.Data.ToTableData();
 
         var pageRequest = new PageRequest(state.Page * state.PageSize, state.PageSize);

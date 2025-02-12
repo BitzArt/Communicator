@@ -10,14 +10,14 @@ internal static class TestSetContext
     {
         var mockedService = MockedService.GetService(configureMockWebApi);
 
-        var options = new FluxRestSetOptions<TestModel, int>();
-        options.EndpointOptions.Path = "model";
+        var serviceOptions = new FluxRestServiceOptions(baseUrl);
+        var setOptions = new FluxRestSetOptions<TestModel, int>(serviceOptions, path: "model");
 
         var setContext = new FluxRestSetContext<TestModel, int>
             (mockedService.GetHttpClient(),
             new FluxRestServiceOptions(baseUrl),
             LoggerFactory.Create(x => { }).CreateLogger("Flux"),
-            options);
+            setOptions);
 
         return setContext;
     }
