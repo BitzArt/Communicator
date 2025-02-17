@@ -162,9 +162,6 @@ public class ServiceRegistrationTests
         Assert.NotNull(service);
         Assert.True(service is FluxServiceContext);
 
-        var provider = ((FluxServiceContext)service).Provider;
-        Assert.True(provider is FluxRestServiceFactory);
-
         var setContextFromService = service.Set<TestModel>();
         Assert.NotNull(setContextFromService);
         Assert.True(setContextFromService is FluxRestSetContext<TestModel, object>);
@@ -195,9 +192,6 @@ public class ServiceRegistrationTests
         Assert.NotNull(serviceContexts);
         Assert.True(serviceContexts.Any());
         Assert.Equal(2, serviceContexts.Count());
-
-        Assert.Contains(serviceContexts, x => x is FluxServiceContext sc && sc.Provider.ServiceName == "service1");
-        Assert.Contains(serviceContexts, x => x is FluxServiceContext sc && sc.Provider.ServiceName == "service2");
     }
 
     [Fact]
