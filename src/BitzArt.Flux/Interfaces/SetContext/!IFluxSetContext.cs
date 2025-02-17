@@ -1,14 +1,7 @@
-﻿using BitzArt.Flux.Sets;
-
-namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux;
 
 /// <inheritdoc cref="IFluxSetContext{TModel, TKey}"/>
-public interface IFluxSetContext<TModel> :
-    IFluxSetOperations.IAdd<TModel>,
-    IFluxSetOperations.IGetAll<TModel>,
-    IFluxSetOperations.IGet<TModel>,
-    IFluxSetOperations.IGetPage<TModel>,
-    IFluxSetOperations.IUpdate<TModel>
+public partial interface IFluxSetContext<TModel>
     where TModel : class
 {
 }
@@ -20,10 +13,7 @@ public interface IFluxSetContext<TModel> :
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
-public interface IFluxSetContext<TModel, TKey> :
-    IFluxSetContext<TModel>,
-    IFluxSetOperations.IGet<TModel, TKey>,
-    IFluxSetOperations.IUpdate<TModel, TKey>
+public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
     where TModel : class
 {
 }
