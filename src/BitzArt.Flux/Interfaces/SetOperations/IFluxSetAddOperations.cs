@@ -1,6 +1,10 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Sets;
 
-public partial interface IFluxSetContext<TModel>
+/// <summary>
+/// Allows adding objects to a set.
+/// </summary>
+/// <typeparam name="TModel">Model type of the set.</typeparam>
+public interface IFluxSetAddOperations<TModel>
 {
     /// <inheritdoc cref="AddAsync{TInputParameters,TResponse}(TModel, TInputParameters, CancellationToken)"/>
     public Task<TModel> AddAsync(TModel value, CancellationToken cancellationToken = default);

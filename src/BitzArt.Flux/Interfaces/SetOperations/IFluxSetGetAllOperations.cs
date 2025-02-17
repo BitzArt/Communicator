@@ -1,6 +1,10 @@
-﻿namespace BitzArt.Flux;
+﻿namespace BitzArt.Flux.Sets;
 
-public partial interface IFluxSetContext<TModel>
+/// <summary>
+/// Allows fetching all objects from the set.
+/// </summary>
+/// <typeparam name="TModel">Model type of the set.</typeparam>
+public interface IFluxSetGetAllOperations<TModel>
 {
     /// <inheritdoc cref="GetAllAsync{TInputParameters}(TInputParameters,CancellationToken)"/>/>
     public Task<IEnumerable<TModel>> GetAllAsync(CancellationToken cancellationToken = default);

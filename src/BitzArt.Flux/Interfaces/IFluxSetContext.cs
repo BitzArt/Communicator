@@ -1,10 +1,16 @@
-﻿namespace BitzArt.Flux;
+﻿using BitzArt.Flux.Sets;
+
+namespace BitzArt.Flux;
 
 /// <inheritdoc cref="IFluxSetContext{TModel, TKey}"/>
-public partial interface IFluxSetContext<TModel>
+public interface IFluxSetContext<TModel> :
+    IFluxSetAddOperations<TModel>,
+    IFluxSetGetAllOperations<TModel>,
+    IFluxSetGetOperations<TModel>,
+    IFluxSetGetPageOperations<TModel>,
+    IFluxSetUpdateOperations<TModel>
     where TModel : class
 {
-    // Interface methods are defined in partial interface files.
 }
 
 /// <summary>
@@ -14,8 +20,10 @@ public partial interface IFluxSetContext<TModel>
 /// </summary>
 /// <typeparam name="TModel">Model type of the set.</typeparam>
 /// <typeparam name="TKey">Key type of the set.</typeparam>
-public partial interface IFluxSetContext<TModel, TKey> : IFluxSetContext<TModel>
+public interface IFluxSetContext<TModel, TKey> :
+    IFluxSetContext<TModel>,
+    IFluxSetGetOperations<TModel, TKey>,
+    IFluxSetUpdateOperations<TModel, TKey>
     where TModel : class
 {
-    // Interface methods are defined in partial interface files.
 }

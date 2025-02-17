@@ -1,8 +1,12 @@
 ﻿using BitzArt.Pagination;
 
-namespace BitzArt.Flux;
+namespace BitzArt.Flux.Sets;
 
-public partial interface IFluxSetContext<TModel>
+/// <summary>
+/// Allows fetching a page of objects from a set.
+/// </summary>
+/// <typeparam name="TModel">Model type of the set.</typeparam>
+public interface IFluxSetGetPageOperations<TModel>
 {
     /// <inheritdoc cref="GetPageAsync{TInputParameters}(PageRequest, TInputParameters, CancellationToken)"/>
     public Task<PageResult<TModel>> GetPageAsync(int offset, int limit, CancellationToken cancellationToken = default);
