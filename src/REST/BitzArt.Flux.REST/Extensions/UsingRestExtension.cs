@@ -45,12 +45,9 @@ public static class UsingRestExtension
         var fluxServiceProvider = builder.ServiceFactory;
         builder.Factory.ServiceContexts.Add(fluxServiceProvider);
 
-        // If configuration action is null, do nothing
-        builder.HttpClientConfiguration ??= (_, _) => { };
-
         builder.Services.AddHttpClient(fluxServiceProvider.ServiceName, (serviceProvider, httpClient) =>
         {
-            builder.HttpClientConfiguration(serviceProvider, httpClient);
+            builder.HttpClientConfiguration?.Invoke(serviceProvider, httpClient);
         }).AddHttpMessageHandler<THandler>();
 
         builder.Services.AddScoped<IFluxServiceContext>(x =>

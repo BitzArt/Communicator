@@ -63,6 +63,43 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sln", "sln", "{9483F0E9-547
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A2CF3320-C42E-44F5-B88A-2CC29EFB9460}"
+	ProjectSection(SolutionItems) = preProject
+		docs\book.toml = docs\book.toml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3122077F-A7F9-4212-97D9-868217EF9D1C}"
+	ProjectSection(SolutionItems) = preProject
+		docs\src\01.introduction.md = docs\src\01.introduction.md
+		docs\src\02.configure.md = docs\src\02.configure.md
+		docs\src\03.use.md = docs\src\03.use.md
+		docs\src\04.implementations.md = docs\src\04.implementations.md
+		docs\src\README.md = docs\src\README.md
+		docs\src\SUMMARY.md = docs\src\SUMMARY.md
+		docs\src\_config.yml = docs\src\_config.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "json", "json", "{7B8D8836-126D-4F12-AF45-7D5414F58850}"
+	ProjectSection(SolutionItems) = preProject
+		docs\src\json\01.introduction.md = docs\src\json\01.introduction.md
+		docs\src\json\README.md = docs\src\json\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rest", "rest", "{4E6BDC28-D997-43B7-B0DE-C676636669FE}"
+	ProjectSection(SolutionItems) = preProject
+		docs\src\rest\01.introduction.md = docs\src\rest\01.introduction.md
+		docs\src\rest\02.endpoints.md = docs\src\rest\02.endpoints.md
+		docs\src\rest\03.variables.md = docs\src\rest\03.variables.md
+		docs\src\rest\04.pagination.md = docs\src\rest\04.pagination.md
+		docs\src\rest\05.advanced.md = docs\src\rest\05.advanced.md
+		docs\src\rest\README.md = docs\src\rest\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "theme", "theme", "{D6F7155D-4BB7-4251-8C92-795F8A9F332D}"
+	ProjectSection(SolutionItems) = preProject
+		docs\theme\favicon.png = docs\theme\favicon.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +179,10 @@ Global
 		{49160F37-A42B-4E08-A4F6-8C7D6F3AEE98} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
 		{F8192256-A717-4EA4-96CE-43196803AE03} = {A3976FBB-F37A-4468-955D-8B2FCC79ACD0}
 		{CBB67562-DEED-4E07-814A-EF6FCB3D5533} = {DF7F7802-31AB-4CDC-A177-9982951AF2DB}
+		{3122077F-A7F9-4212-97D9-868217EF9D1C} = {A2CF3320-C42E-44F5-B88A-2CC29EFB9460}
+		{7B8D8836-126D-4F12-AF45-7D5414F58850} = {3122077F-A7F9-4212-97D9-868217EF9D1C}
+		{4E6BDC28-D997-43B7-B0DE-C676636669FE} = {3122077F-A7F9-4212-97D9-868217EF9D1C}
+		{D6F7155D-4BB7-4251-8C92-795F8A9F332D} = {A2CF3320-C42E-44F5-B88A-2CC29EFB9460}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {251D5A13-6C1B-4B0D-A6F5-3B95FF4C0F54}
