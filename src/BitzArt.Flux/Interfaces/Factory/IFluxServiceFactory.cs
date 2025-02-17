@@ -1,7 +1,8 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// Internal Flux Service factory.
+/// Holds configuration of a specific external service.
+/// Can create new service contexts.
 /// </summary>
 public interface IFluxServiceFactory
 {
