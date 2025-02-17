@@ -1,7 +1,7 @@
 ﻿namespace BitzArt.Flux;
 
 /// <summary>
-/// Internal Flux factory. Stores factories for configured services.
+/// Contains nested factories for configured services.
 /// </summary>
 public interface IFluxFactory
 {

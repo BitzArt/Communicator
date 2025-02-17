@@ -1,5 +1,12 @@
 ﻿namespace BitzArt.Flux.REST;
 
+internal interface IFluxRestSetEndpointOptions<TModel, TInputParameters> : IFluxRestSetEndpointOptions<TModel>
+    where TModel : class
+    where TInputParameters : IRequestParameters?
+{
+    public Func<TInputParameters, IRestRequestParameters>? TransformParametersFunc { get; internal set; }
+}
+
 internal interface IFluxRestSetEndpointOptions<TModel>
     where TModel : class
 {
@@ -9,8 +16,5 @@ internal interface IFluxRestSetEndpointOptions<TModel>
     /// </summary>
     public string? Path { get; internal set; }
 
-    /// <summary>
-    /// Http method to use when calling the endpoint.
-    /// </summary>
-    public HttpMethod? Method { get; internal set; }
+    public HttpRequestMessage PrepareRequest(IRequestPreparationParameters parameters);
 }

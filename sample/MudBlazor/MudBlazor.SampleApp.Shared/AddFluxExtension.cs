@@ -11,9 +11,11 @@ public static class AddFluxExtension
         services.AddFlux(x =>
         {
             x.AddService("library-web-api")
-            .UsingRest(baseUrl.TrimEnd('/') + "/api")
+                .UsingRest(baseUrl.TrimEnd('/') + "/api")
+
                 .AddSet<Author, int>()
                     .WithEndpoint("authors")
+
                 .AddSet<Book, int>()
                     .WithEndpoint("books")
                     .WithPageEndpoint("books{query}");

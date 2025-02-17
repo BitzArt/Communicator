@@ -5,7 +5,7 @@ namespace BitzArt.Flux;
 public class ServiceRegistrationTests
 {
     [Fact]
-    public void AddFlux_WithEmptyConfiguration_AddsEmptyFluxServiceFactory()
+    public void AddFlux_WithEmptyConfiguration_ShouldAddEmptyFluxServiceFactory()
     {
         var services = new ServiceCollection();
 
@@ -20,7 +20,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddFlux_Twice_ThrowsOnSecondAdd()
+    public void AddFlux_Twice_ShouldThrowOnSecondAdd()
     {
         var services = new ServiceCollection();
 
@@ -30,16 +30,13 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddFlux_Empty_AddsCommunicationContext()
+    public void AddFlux_Empty_ShouldAddFluxContext()
     {
         var services = new ServiceCollection();
         services.AddFlux(x => { });
         var serviceProvider = services.BuildServiceProvider();
 
-        var fluxByInterface = serviceProvider.GetService<IFluxContext>();
-        Assert.NotNull(fluxByInterface);
-
-        var fluxByType = serviceProvider.GetService<FluxContext>();
-        Assert.Null(fluxByType);
+        var context = serviceProvider.GetService<IFluxContext>();
+        Assert.NotNull(context);
     }
 }

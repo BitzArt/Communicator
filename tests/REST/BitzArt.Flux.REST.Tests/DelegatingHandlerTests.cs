@@ -6,7 +6,7 @@ namespace BitzArt.Flux;
 public class DelegatingHandlerTests
 {
     [Fact]
-    public void GetAsync_WithDelegatingHandler_CallsHandler()
+    public void GetAsync_WithDelegatingHandler_ShouldCallHandler()
     {
         var services = new ServiceCollection();
 
@@ -18,17 +18,13 @@ public class DelegatingHandlerTests
             flux.AddService("test-service")
                 .UsingRest<TestHandler>("http://test")
 
-                .AddSet<TestModel>();
+                .AddSet<object>();
         });
 
         var provider = services.BuildServiceProvider();
 
-        var set = provider.GetRequiredService<IFluxSetContext<TestModel>>();
-        set.AddAsync<object>(new TestModel
-        {
-            Id = 1,
-            Name = ""
-        });
+        var set = provider.GetRequiredService<IFluxSetContext<object>>();
+        set.AddAsync<object>(new object());
 
         Assert.True(testHandler.Called);
     }

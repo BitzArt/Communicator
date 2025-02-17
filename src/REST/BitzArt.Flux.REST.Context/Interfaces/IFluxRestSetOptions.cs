@@ -3,11 +3,9 @@
 internal interface IFluxRestSetOptions<TModel>
     where TModel : class
 {
-    public IFluxRestSetEndpointOptions<TModel> EndpointOptions { get; }
+    public FluxRestServiceOptions ServiceOptions { get; }
 
-    public IFluxRestSetEndpointOptions<TModel> PageEndpointOptions { get; }
-
-    public IFluxRestSetIdEndpointOptions<TModel> IdEndpointOptions { get; }
-
+    public IFluxRestSetEndpointCollection<TModel> EndpointCollection { get; }
+    string? Path { get; }
     internal Type? KeyType { get; }
 }

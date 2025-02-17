@@ -6,7 +6,7 @@ namespace BitzArt.Flux;
 public class ServiceRegistrationTests
 {
     [Fact]
-    public void UsingJson_WithModel_AddsFactoryAndSetContext()
+    public void UsingJson_WithModel_ShouldAddFactoryAndSetContext()
     {
         var services = new ServiceCollection();
 
@@ -38,7 +38,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ReturnsAll()
+    public void AddFlux_GetAllPackageSignatureElementsFromFluxContext_ShouldReturnAll()
     {
         var services = new ServiceCollection();
 
@@ -74,7 +74,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddFlux2Services_GetServiceContextsFromDiContainer_Returns()
+    public void AddFlux2Services_GetServiceContextsFromDiContainer_ShouldReturn()
     {
         var services = new ServiceCollection();
 
@@ -104,7 +104,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddSet_SameModelDifferentNames_Configures()
+    public void AddSet_SameModelDifferentNames_ShouldConfigure()
     {
         var services = new ServiceCollection();
 
@@ -154,7 +154,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddSet_SameModelTwiceNoName_Throws()
+    public void AddSet_SameModelTwiceNoName_ShouldThrow()
     {
         var services = new ServiceCollection();
 
@@ -174,7 +174,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void UsingJson_WithJsonConfiguration_Configures()
+    public void UsingJson_WithJsonConfiguration_ShouldConfigure()
     {
         var services = new ServiceCollection();
 
@@ -209,7 +209,7 @@ public class ServiceRegistrationTests
     }
 
     [Fact]
-    public void AddSet_TwoSetsSameModelDifferentNames_AddsNamed()
+    public void AddSet_TwoSetsSameModelDifferentNames_ShouldAddNamed()
     {
         var services = new ServiceCollection();
 
